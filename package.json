@@ -1,0 +1,18 @@
+{
+  "name": "travel-sudan",
+  "version": "1.0.0",
+  "description": "منصة ترحال في السودان",
+  "main": "index.js",
+  "scripts": {
+    "dev": "live-server --port=3000",
+    "build": "echo 'Build step not required for static site'",
+    "deploy": "gh-pages -d ."
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0",
+    "live-server": "^1.2.2"
+  }
+}
