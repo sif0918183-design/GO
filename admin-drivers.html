@@ -1,0 +1,131 @@
+<!-- admin-drivers.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة السائقين - ترحال</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>إدارة السائقين</h1>
+            <div class="admin-actions">
+                <button class="btn-primary" id="addDriverBtn">إضافة سائق جديد</button>
+                <button class="btn-logout" id="adminLogoutBtn">تسجيل خروج</button>
+            </div>
+        </header>
+
+        <div class="admin-main">
+            <!-- Driver Registration Form -->
+            <div class="registration-form" id="registrationForm">
+                <h2>تسجيل سائق جديد</h2>
+                
+                <form id="driverForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adminWhatsapp">رقم الواتساب</label>
+                            <input type="tel" id="adminWhatsapp" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAdditional">رقم إضافي</label>
+                            <input type="tel" id="adminAdditional">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminFullName">الاسم الرباعي</label>
+                        <input type="text" id="adminFullName" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="carCategory">فئة السيارة</label>
+                            <select id="carCategory" required>
+                                <option value="sedan">سيدان</option>
+                                <option value="suv">SUV</option>
+                                <option value="van">فان</option>
+                                <option value="luxury">فاخرة</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="carMake">ماركة السيارة</label>
+                            <input type="text" id="carMake" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="carModel">موديل السيارة</label>
+                            <input type="text" id="carModel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="carYear">سنة الصنع</label>
+                            <input type="number" id="carYear" min="2000" max="2024" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="carImage">صورة السيارة</label>
+                        <input type="file" id="carImage" accept="image/*">
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="driverPhone">رقم الموبايل للتسجيل</label>
+                        <input type="tel" id="driverPhone" required>
+                        <small>سيستخدم هذا الرقم لتسجيل الدخول</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="generatedPassword">كلمة المرور</label>
+                        <div class="password-generator">
+                            <input type="text" id="generatedPassword" readonly>
+                            <button type="button" class="btn-outline" id="generatePasswordBtn">
+                                توليد كلمة مرور
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">تسجيل السائق</button>
+                        <button type="button" class="btn-secondary" id="cancelRegistrationBtn">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Drivers List -->
+            <div class="drivers-list">
+                <h2>السائقين المسجلين</h2>
+                
+                <div class="search-bar">
+                    <input type="text" id="searchDrivers" placeholder="بحث بالاسم أو الرقم...">
+                </div>
+                
+                <div class="drivers-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>رقم الموبايل</th>
+                                <th>الرصيد</th>
+                                <th>الحالة</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="driversTableBody">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
