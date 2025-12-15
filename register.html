@@ -1,0 +1,110 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل - ترحال السودان</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="register-card">
+            <div class="logo">ترحال 🇸🇩</div>
+            
+            <div class="type-selector">
+                <button class="type-btn active" data-type="customer">
+                    <span class="icon">👤</span>
+                    <span>زبون</span>
+                </button>
+                <button class="type-btn" data-type="driver">
+                    <span class="icon">🚗</span>
+                    <span>سائق</span>
+                </button>
+            </div>
+
+            <!-- نموذج تسجيل الزبون -->
+            <form id="customerForm" class="form-container active">
+                <h2>تسجيل حساب جديد</h2>
+                
+                <div class="form-group">
+                    <label for="fullName">الاسم الرباعي</label>
+                    <input type="text" id="fullName" placeholder="أحمد محمد علي" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerPhone">رقم الموبايل</label>
+                    <div class="phone-input">
+                        <span class="country-code">+249</span>
+                        <input type="tel" id="customerPhone" placeholder="912345678" required>
+                    </div>
+                    <button type="button" class="btn-outline" id="sendVerificationBtn">
+                        إرسال رمز التحقق
+                    </button>
+                </div>
+                
+                <div class="form-group verification-group" id="verificationGroup" style="display: none;">
+                    <label for="verificationCode">رمز التحقق</label>
+                    <div class="code-inputs">
+                        <input type="text" maxlength="1" class="code-input">
+                        <input type="text" maxlength="1" class="code-input">
+                        <input type="text" maxlength="1" class="code-input">
+                        <input type="text" maxlength="1" class="code-input">
+                        <input type="text" maxlength="1" class="code-input">
+                        <input type="text" maxlength="1" class="code-input">
+                    </div>
+                    <div class="timer" id="timer">02:00</div>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="registerBtn" disabled>
+                    إنشاء الحساب
+                </button>
+                
+                <div class="login-link">
+                    لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+                </div>
+            </form>
+
+            <!-- نموذج تسجيل السائق -->
+            <div id="driverRegisterInfo" class="form-container">
+                <h2>التسجيل كسائق</h2>
+                
+                <div class="info-box">
+                    <div class="icon-large">🚗</div>
+                    <h3>كيفية التسجيل</h3>
+                    <p>للتسجيل كسائق في منصة ترحال، يرجى اتباع الخطوات التالية:</p>
+                    
+                    <ol class="steps">
+                        <li>التواصل مع فريق التسجيل عبر الواتساب</li>
+                        <li>إرسال المستندات المطلوبة</li>
+                        <li>سيقوم الفريق بإنشاء حساب لك</li>
+                        <li>ستتلقى رسالة بكلمة المرور</li>
+                        <li>يمكنك تسجيل الدخول بعدها مباشرة</li>
+                    </ol>
+                    
+                    <div class="whatsapp-section">
+                        <a href="https://wa.me/249123456789?text=مرحباً، أريد التسجيل كسائق في منصة ترحال" 
+                           class="whatsapp-btn" target="_blank">
+                            <span class="whatsapp-icon">📱</span>
+                            التواصل عبر واتساب
+                        </a>
+                        <p class="whatsapp-note">سيتم الرد عليك خلال 24 ساعة</p>
+                    </div>
+                    
+                    <div class="driver-login-section">
+                        <p>إذا كنت مسجلاً بالفعل:</p>
+                        <a href="driver-login.html" class="btn-secondary">
+                            تسجيل دخول السائق
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>
