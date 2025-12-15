@@ -1,0 +1,178 @@
+<!-- driver-dashboard.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة السائق - ترحال</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <div class="logo">ترحال 🚗</div>
+                <div class="driver-info">
+                    <span id="driverName">محمد أحمد</span>
+                    <span class="status-badge" id="statusBadge">غير متصل</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="balance-container">
+                    <span class="balance-label">الرصيد:</span>
+                    <span class="balance-amount" id="currentBalance">15,000 SDG</span>
+                </div>
+                <button class="btn-logout" id="logoutBtn">تسجيل خروج</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Status Panel -->
+            <section class="status-panel">
+                <div class="panel-header">
+                    <h3>حالة العمل</h3>
+                    <label class="switch">
+                        <input type="checkbox" id="statusToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="balance-warning" id="balanceWarning" style="display: none;">
+                    <div class="warning-icon">⚠️</div>
+                    <div class="warning-text">
+                        <strong>رصيد منخفض!</strong>
+                        <p>رصيدك أقل من 3,000 SDG. لا يمكنك استقبال طلبات جديدة.</p>
+                        <a href="tel:+249123456789" class="btn-warning">اتصال بخدمة العملاء</a>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="todayTrips">0</div>
+                        <div class="stat-label">رحلات اليوم</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="weeklyEarnings">0</div>
+                        <div class="stat-label">أرباح الأسبوع</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="rating">4.8</div>
+                        <div class="stat-label">التقييم</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Trip -->
+            <section class="active-trip-panel" id="activeTripPanel" style="display: none;">
+                <div class="panel-header">
+                    <h3>رحلة نشطة</h3>
+                    <div class="trip-timer" id="tripTimer">00:00</div>
+                </div>
+                
+                <div class="trip-details">
+                    <div class="customer-info">
+                        <div class="customer-avatar">👤</div>
+                        <div>
+                            <div class="customer-name" id="customerName">عمر خالد</div>
+                            <div class="customer-phone" id="customerPhone">+249 91 234 5678</div>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-route">
+                        <div class="route-point pickup">
+                            <div class="point-marker">📍</div>
+                            <div>
+                                <div class="point-label">نقطة الالتقاط</div>
+                                <div class="point-address" id="pickupAddress">الخرطوم، شارع النيل</div>
+                            </div>
+                        </div>
+                        
+                        <div class="route-point dropoff">
+                            <div class="point-marker">🏁</div>
+                            <div>
+                                <div class="point-label">الوجهة</div>
+                                <div class="point-address" id="dropoffAddress">أم درمان، السوق</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-actions">
+                        <button class="btn-primary" id="startTripBtn">بدء الرحلة</button>
+                        <button class="btn-danger" id="endTripBtn" style="display: none;">إنهاء الرحلة</button>
+                        <button class="btn-outline" id="cancelTripBtn">إلغاء</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trip Requests -->
+            <section class="requests-panel" id="requestsPanel">
+                <div class="panel-header">
+                    <h3>طلبات الرحلات</h3>
+                    <div class="requests-count" id="requestsCount">0 طلب</div>
+                </div>
+                
+                <div class="requests-list" id="requestsList">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                
+                <div class="no-requests" id="noRequestsMessage">
+                    <div class="no-requests-icon">🚗</div>
+                    <p>لا توجد طلبات رحلات حالياً</p>
+                    <p>تأكد من أن حالتك "متصل"</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Trip Window Modal -->
+        <div class="modal-overlay" id="tripModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>رحلة سارية</h3>
+                    <button class="modal-close" id="closeModalBtn" disabled>✖</button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="trip-map" id="tripMap">
+                        <!-- Simple map representation -->
+                        <div class="map-placeholder">
+                            <div class="map-route">
+                                <div class="map-point start">📍</div>
+                                <div class="map-line"></div>
+                                <div class="map-point end">🏁</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-info">
+                        <div class="info-row">
+                            <span>المسافة:</span>
+                            <span id="tripDistance">5.2 كم</span>
+                        </div>
+                        <div class="info-row">
+                            <span>التكلفة:</span>
+                            <span id="tripFare">3,000 SDG</span>
+                        </div>
+                        <div class="info-row">
+                            <span>الرصيد بعد الرحلة:</span>
+                            <span id="balanceAfter">12,000 SDG</span>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="btn-primary" id="confirmEndTripBtn">تأكيد إنهاء الرحلة</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/trip-system.js"></script>
+    <script src="js/driver-dashboard.js"></script>
+</body>
+</html>
