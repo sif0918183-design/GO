@@ -1,0 +1,263 @@
+<!-- init.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تهيئة نظام ترحال</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .step {
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-right: 5px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        .step.pending { border-color: #95a5a6; }
+        .step.loading { border-color: #f39c12; background: #fff3e0; }
+        .step.success { border-color: #27ae60; background: #e8f5e9; }
+        .step.error { border-color: #e74c3c; background: #ffebee; }
+        .status-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-left: 10px;
+            text-align: center;
+            border-radius: 50%;
+        }
+        .pending .status-icon { background: #95a5a6; color: white; content: '⏳'; }
+        .loading .status-icon { background: #f39c12; color: white; content: '🔄'; animation: spin 1s linear infinite; }
+        .success .status-icon { background: #27ae60; color: white; content: '✅'; }
+        .error .status-icon { background: #e74c3c; color: white; content: '❌'; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .actions {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        .details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .details.show { display: block; }
+        .jsonbin-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 تهيئة نظام ترحال السودان</h1>
+        
+        <div id="stepsContainer">
+            <div class="step pending" id="step1">
+                <strong>الخطوة 1:</strong> الاتصال بـ Supabase
+            </div>
+            <div class="step pending" id="step2">
+                <strong>الخطوة 2:</strong> إعداد JSONBin
+            </div>
+            <div class="step pending" id="step3">
+                <strong>الخطوة 3:</strong> تحميل البيانات
+            </div>
+            <div class="step pending" id="step4">
+                <strong>الخطوة 4:</strong> بدء الخدمات
+            </div>
+        </div>
+        
+        <div class="details" id="detailsPanel">
+            <h3>تفاصيل التهيئة:</h3>
+            <pre id="detailsText"></pre>
+        </div>
+        
+        <div class="jsonbin-info" id="jsonbinInfo" style="display: none;">
+            <h4>معلومات JSONBin:</h4>
+            <p>المعرف: <span id="binId"></span></p>
+            <p>الرابط: <span id="binLink"></span></p>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary" onclick="startInitialization()" id="startBtn">
+                بدء التهيئة
+            </button>
+            <button class="btn" onclick="showDetails()" id="detailsBtn">
+                إظهار التفاصيل
+            </button>
+        </div>
+        
+        <div id="result" style="margin-top: 30px; text-align: center;"></div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/simple-init.js"></script>
+    
+    <script>
+        let detailsVisible = false;
+        
+        function startInitialization() {
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('startBtn').textContent = 'جاري التهيئة...';
+            
+            // إخفاء النتيجة السابقة
+            document.getElementById('result').innerHTML = '';
+            
+            // تفعيل صفحة التفاصيل
+            document.getElementById('detailsPanel').classList.add('show');
+            
+            // بدء التهيئة
+            initializeTravelSystem()
+                .then(result => {
+                    if (result.success) {
+                        showSuccess(result);
+                    } else {
+                        showError(result);
+                    }
+                })
+                .catch(error => {
+                    showError({ message: 'خطأ غير متوقع: ' + error.message });
+                });
+        }
+        
+        function showSuccess(result) {
+            document.getElementById('result').innerHTML = `
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #27ae60;">
+                    <h2 style="color: #27ae60;">✅ تم تهيئة النظام بنجاح!</h2>
+                    <p>${result.message}</p>
+                    <p>معرف JSONBin: <strong>${result.binId}</strong></p>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="goToHome()">
+                            الذهاب للصفحة الرئيسية
+                        </button>
+                        <button class="btn" onclick="viewJSONBin()" style="background: #3498db; color: white;">
+                            عرض JSONBin
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // إظهار معلومات JSONBin
+            if (result.binId && result.binId !== 'local') {
+                document.getElementById('jsonbinInfo').style.display = 'block';
+                document.getElementById('binId').textContent = result.binId;
+                document.getElementById('binLink').innerHTML = 
+                    `<a href="https://jsonbin.io/${result.binId}" target="_blank">https://jsonbin.io/${result.binId}</a>`;
+            }
+        }
+        
+        function showError(result) {
+            document.getElementById('result').innerHTML = `
+                <div style="background: #ffebee; padding: 20px; border-radius: 10px; border: 2px solid #e74c3c;">
+                    <h2 style="color: #e74c3c;">❌ فشل تهيئة النظام</h2>
+                    <p>${result.message}</p>
+                    <p>يرجى التحقق من:</p>
+                    <ul style="text-align: right;">
+                        <li>مفاتيح API في supabase-config.js</li>
+                        <li>اتصال الإنترنت</li>
+                        <li>تشغيل SQL script في Supabase</li>
+                    </ul>
+                    <button class="btn" onclick="location.reload()" style="background: #e74c3c; color: white;">
+                        إعادة المحاولة
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = 'إعادة المحاولة';
+        }
+        
+        function showDetails() {
+            detailsVisible = !detailsVisible;
+            document.getElementById('detailsPanel').classList.toggle('show', detailsVisible);
+            document.getElementById('detailsBtn').textContent = 
+                detailsVisible ? 'إخفاء التفاصيل' : 'إظهار التفاصيل';
+        }
+        
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+        
+        function viewJSONBin() {
+            const binId = localStorage.getItem('travel_jsonbin_id');
+            if (binId && binId !== 'local') {
+                window.open(`https://jsonbin.io/${binId}`, '_blank');
+            }
+        }
+        
+        // تحديث الخطوات في الوقت الحقيقي
+        function updateStepStatus(stepId, status, message) {
+            const step = document.getElementById(`step${stepId}`);
+            if (step) {
+                step.className = `step ${status}`;
+                step.innerHTML = `<strong>الخطوة ${stepId}:</strong> ${message}`;
+                
+                // تحديث التفاصيل
+                const details = document.getElementById('detailsText');
+                if (details) {
+                    details.textContent += `\n[${new Date().toLocaleTimeString('ar-SA')}] ${message}`;
+                    details.scrollTop = details.scrollHeight;
+                }
+            }
+        }
+        
+        // جعل وظيفة تحديث الخطوات متاحة عالمياً
+        window.updateStep = updateStepStatus;
+        
+        // إضافة بعض التفاصيل الأولية
+        document.getElementById('detailsText').textContent = 
+            `📝 سجل تهيئة نظام ترحال السودان\n` +
+            `⏰ بدأت في: ${new Date().toLocaleString('ar-SA')}\n` +
+            `================================\n`;
+        
+        console.log('📋 صفحة التهيئة جاهزة');
+    </script>
+</body>
+</html>
