@@ -1,18 +1,36 @@
 {
   "name": "travel-sudan",
   "version": "1.0.0",
-  "description": "منصة ترحال في السودان",
-  "main": "index.js",
+  "description": "نظام ترحال في السودان - خدمة النقل الذكي",
+  "homepage": "https://travel-sudan.vercel.app",
+  "author": "ترحال السودان",
+  "license": "MIT",
+  "keywords": [
+    "travel",
+    "sudan",
+    "transport",
+    "ride-hailing",
+    "taxi",
+    "نقل",
+    "سودان",
+    "ترحال"
+  ],
   "scripts": {
-    "dev": "live-server --port=3000",
-    "build": "echo 'Build step not required for static site'",
-    "deploy": "gh-pages -d ."
+    "dev": "live-server --port=3000 --host=localhost",
+    "build": "echo 'Building static site...' && node build.js",
+    "start": "live-server --port=3000",
+    "deploy": "vercel --prod",
+    "deploy:dev": "vercel",
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0"
   },
   "devDependencies": {
-    "gh-pages": "^6.0.0",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "vercel": "^32.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
