@@ -1,4 +1,7 @@
 // js/init-system.js
+// ============================================
+// نظام تهيئة ترحال السودان (نسخة مستقرة)
+// ============================================
 
 class TravelSudanSystem {
     constructor() {
@@ -16,62 +19,75 @@ class TravelSudanSystem {
         console.log('🚀 بدء تهيئة نظام ترحال السودان...');
 
         try {
-            // 1. التحقق من Supabase
+            /* 1️⃣ التحقق من Supabase Client */
             if (!window.supabaseClient) {
-                throw new Error('Supabase Client غير جاهز');
+                throw new Error('Supabase Client غير موجود');
             }
 
             this.supabase = window.supabaseClient;
+            console.log('✅ Supabase Client متاح');
 
-            // 2. اختبار اتصال Supabase (بشكل آمن)
+            /* 2️⃣ اختبار الاتصال (الطريقة الصحيحة) */
             await this.testSupabaseConnection();
 
-            // 3. تهيئة JSONBin (اختياري)
+            /* 3️⃣ تهيئة JSONBin (اختياري) */
             await this.initializeJSONBin();
 
-            // 4. تحميل البيانات الأولية
+            /* 4️⃣ تحميل البيانات الأولية */
             await this.loadInitialData();
 
-            // 5. بدء الخدمات
+            /* 5️⃣ بدء الخدمات */
             await this.startServices();
 
             this.initialized = true;
 
-            console.log('✅ تم تهيئة النظام بنجاح');
-            showMessage('success', 'تم تهيئة النظام بنجاح');
+            console.log('🎉 تم تهيئة النظام بنجاح');
+            if (typeof showMessage === 'function') {
+                showMessage('success', 'تم تهيئة النظام بنجاح');
+            }
 
             return { success: true };
 
         } catch (error) {
             console.error('❌ فشل تهيئة النظام:', error);
-            showMessage('error', `فشل التهيئة: ${error.message}`);
+            if (typeof showMessage === 'function') {
+                showMessage('error', `فشل التهيئة: ${error.message}`);
+            }
             return { success: false, error: error.message };
         }
     }
 
+    /* ============================================
+       اختبار اتصال Supabase (بدون جداول أو RLS)
+       ============================================ */
     async testSupabaseConnection() {
         console.log('🔄 اختبار اتصال Supabase...');
 
         try {
-            // استعلام آمن بدون الاعتماد على جداول
-            const { error } = await this.supabase
-                .rpc('now');
+            const { data, error } = await this.supabase.auth.getSession();
 
             if (error) {
-                console.warn('⚠️ الاتصال موجود لكن RPC غير متاح');
+                throw error;
             }
 
-            console.log('✅ Supabase متصل');
+            console.log('✅ Supabase متصل (Auth OK)');
             return true;
 
         } catch (error) {
+            console.error('❌ فشل الاتصال بـ Supabase:', error);
             throw new Error('فشل الاتصال بقاعدة البيانات');
         }
     }
 
+    /* ============================================
+       تهيئة JSONBin (اختياري)
+       ============================================ */
     async initializeJSONBin() {
-        if (typeof getJSONBin !== 'function') {
-            console.warn('⚠️ JSONBin غير مهيأ، سيتم التخطي');
+        if (
+            typeof getJSONBin !== 'function' ||
+            typeof updateJSONBin !== 'function'
+        ) {
+            console.warn('⚠️ JSONBin غير مهيأ – سيتم التخطي');
             return false;
         }
 
@@ -89,30 +105,44 @@ class TravelSudanSystem {
 
             return true;
 
-        } catch {
-            console.warn('⚠️ JSONBin غير متاح، النظام سيعمل بدونه');
+        } catch (error) {
+            console.warn('⚠️ JSONBin غير متاح – النظام سيعمل بدونه');
             return false;
         }
     }
 
+    /* ============================================
+       بيانات أولية
+       ============================================ */
     createInitialData() {
         return {
             system: {
                 name: 'ترحال السودان',
                 version: '1.0.0',
-                initialized: new Date().toISOString()
+                initializedAt: new Date().toISOString(),
+                status: 'active'
             },
             activeDrivers: [],
-            tripRequests: []
+            tripRequests: [],
+            settings: {
+                searchRadiusKm: 20,
+                baseFare: 3000
+            }
         };
     }
 
+    /* ============================================
+       تحميل البيانات
+       ============================================ */
     async loadInitialData() {
-        console.log('📥 تحميل البيانات...');
-        await new Promise(r => setTimeout(r, 300));
+        console.log('📥 تحميل البيانات الأولية...');
+        await new Promise(resolve => setTimeout(resolve, 300));
         console.log('✅ تم تحميل البيانات');
     }
 
+    /* ============================================
+       بدء الخدمات
+       ============================================ */
     async startServices() {
         console.log('⚙️ بدء الخدمات...');
 
@@ -123,13 +153,21 @@ class TravelSudanSystem {
         console.log('✅ الخدمات نشطة');
     }
 
+    /* ============================================
+       مزامنة (حاليًا وهمية – للتوسعة لاحقًا)
+       ============================================ */
     async syncWithSupabase() {
         console.log('🔄 مزامنة البيانات...');
+        // سيتم إضافة منطق المزامنة لاحقًا
     }
 }
 
-// نسخة واحدة فقط
+/* ============================================
+   إنشاء نسخة واحدة فقط من النظام
+   ============================================ */
 const travelSystem = new TravelSudanSystem();
 
-// استدعاء يدوي فقط (من init.html)
+/* ============================================
+   تصدير دالة التهيئة للاستخدام في init.html
+   ============================================ */
 window.initializeTravelSystem = () => travelSystem.initialize();
