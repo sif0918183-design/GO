@@ -1,15 +1,19 @@
-// js/supabase-config.js
-const SUPABASE_URL = 'https://yfumkrfhccwvvfiimhjr.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdW1rcmZoY2N3dnZmaWltaGpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4NDYyODEsImV4cCI6MjA4MTQyMjI4MX0.iT6dqwPZhhAb3Y9ZvR_CbHJw9on-CS5OCWoiSC95FOI';
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// js/supabase-config.js - الإصدار الآمن
+const supabaseClient = supabase.createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
 
 // JSONBin.io configuration for storing temporary data
-const JSONBIN_API_KEY = '$2a$10$.o4BAbiMjGS4tEZUVokTsufL18lsFyO30xIOXO8wT4dP/sqGN/61e';
-const JSONBIN_BIN_ID = '694130b343b1c97be9f1ea04';
+const JSONBIN_API_KEY = process.env.JSONBIN_API_KEY;
+const JSONBIN_BIN_ID = '694130b343b1c97be9f1ea04'; // يمكن ترك معرف الـ Bin في الكود إذا لم يكن سرياً
 
 // Initialize JSONBin
 async function updateJSONBin(data) {
+    if (!JSONBIN_API_KEY) {
+        console.error('JSONBin API Key is missing');
+        return null;
+    }
     try {
         const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
             method: 'PUT',
@@ -28,6 +32,10 @@ async function updateJSONBin(data) {
 }
 
 async function getJSONBin() {
+    if (!JSONBIN_API_KEY) {
+        console.error('JSONBin API Key is missing');
+        return null;
+    }
     try {
         const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
             headers: {
