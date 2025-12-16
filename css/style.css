@@ -440,3 +440,266 @@ input:checked + .slider:before {
         grid-template-columns: 1fr;
     }
 }
+/* إضافة هذه الأنماط لملف style.css */
+
+/* الصفحة الرئيسية */
+.hero {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.btn-large {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+}
+
+/* المميزات */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+/* خطوات العمل */
+.steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.step {
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    margin: 10px;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: var(--secondary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto 20px;
+}
+
+/* لوحة تحكم الزبون */
+.customer-dashboard .request-trip-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.location-inputs {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.input-group {
+    margin-bottom: 30px;
+}
+
+.btn-location {
+    background: var(--light-color);
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.car-options {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.car-option {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.car-option.active {
+    border-color: var(--secondary-color);
+    background: rgba(243, 156, 18, 0.1);
+}
+
+/* صفحة طلب الرحلة */
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+}
+
+.step {
+    text-align: center;
+    flex: 1;
+    position: relative;
+}
+
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 25px;
+    right: 50%;
+    width: 100%;
+    height: 2px;
+    background: #ddd;
+    z-index: -1;
+}
+
+.step.active::after {
+    background: var(--secondary-color);
+}
+
+.location-inputs .input-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+.input-icon {
+    font-size: 2rem;
+}
+
+/* التسجيل كسائق */
+.requirements-list {
+    display: grid;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.requirement {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.earnings-cards {
+    display: flex;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.earning-card {
+    flex: 1;
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.earning-amount {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+/* تذييل الصفحة */
+.footer {
+    background: var(--primary-color);
+    color: white;
+    padding: 60px 0 20px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-col a {
+    display: block;
+    color: #ddd;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.footer-col a:hover {
+    color: var(--secondary-color);
+}
+
+/* تحسينات للجوال */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .customer-dashboard .request-trip-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .steps {
+        flex-direction: column;
+    }
+    
+    .step:not(:last-child)::after {
+        display: none;
+    }
+    
+    .car-options {
+        flex-direction: column;
+    }
+    
+    .earnings-cards {
+        flex-direction: column;
+    }
+}
