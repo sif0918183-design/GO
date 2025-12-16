@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - ترحال</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+        
+        .user-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .user-type-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .user-type-btn.active {
+            border-color: var(--secondary-color);
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .forgot-password {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .login-divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .login-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            left: 0;
+            height: 1px;
+            background: #eee;
+        }
+        
+        .login-divider span {
+            background: white;
+            padding: 0 15px;
+            color: var(--gray-color);
+        }
+        
+        .btn-block {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">🚗 ترحال</a>
+            <div class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="register.html">التسجيل</a>
+                <a href="login.html" class="active">تسجيل دخول</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="page-template" style="min-height: 70vh;">
+        <div class="container">
+            <div class="login-form">
+                <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">تسجيل الدخول</h2>
+                
+                <div class="user-type-selector">
+                    <button class="user-type-btn active" data-type="customer">زبون</button>
+                    <button class="user-type-btn" data-type="driver">سائق</button>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف</label>
+                        <input type="tel" id="phone" placeholder="أدخل رقم هاتفك" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">كلمة المرور</label>
+                        <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                    </div>
+                    
+                    <div class="login-options">
+                        <label class="remember-me">
+                            <input type="checkbox">
+                            <span>تذكرني</span>
+                        </label>
+                        <a href="forgot-password.html" class="forgot-password">نسيت كلمة المرور؟</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 15px; font-size: 18px;">
+                        تسجيل الدخول
+                    </button>
+                    
+                    <div class="login-divider">
+                        <span>أو</span>
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline btn-block" id="phoneLoginBtn" style="padding: 15px;">
+                        الدخول برقم الهاتف فقط
+                    </button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <p style="color: var(--gray-color);">
+                        ليس لديك حساب؟ <a href="register.html" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">سجل الآن</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ترحال</h3>
+                    <p>خدمة النقل الذكي الأولى في السودان</p>
+                </div>
+                <div class="footer-col">
+                    <h4>روابط سريعة</h4>
+                    <a href="index.html">الرئيسية</a>
+                    <a href="register.html">التسجيل</a>
+                    <a href="contact.html">اتصل بنا</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 ترحال. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // اختيار نوع المستخدم
+            document.querySelectorAll('.user-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.user-type-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+            
+            // تسجيل الدخول
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const phone = document.getElementById('phone').value;
+                const password = document.getElementById('password').value;
+                const userType = document.querySelector('.user-type-btn.active').dataset.type;
+                
+                if (!phone || !password) {
+                    showMessage('error', 'يرجى ملء جميع الحقول');
+                    return;
+                }
+                
+                if (!validatePhone(phone)) {
+                    showMessage('error', 'يرجى إدخال رقم هاتف صحيح');
+                    return;
+                }
+                
+                // محاكاة تسجيل الدخول
+                showMessage('info', 'جاري تسجيل الدخول...');
+                
+                setTimeout(() => {
+                    // محاكاة نجاح تسجيل الدخول
+                    const userData = {
+                        id: 'user_' + Date.now(),
+                        phone: phone,
+                        full_name: 'مستخدم تجريبي',
+                        type: userType
+                    };
+                    
+                    localStorage.setItem('travel_session', JSON.stringify({
+                        user: userData,
+                        type: userType,
+                        timestamp: Date.now()
+                    }));
+                    
+                    showMessage('success', 'تم تسجيل الدخول بنجاح!');
+                    
+                    setTimeout(() => {
+                        window.location.href = userType === 'driver' ? 
+                            'driver-dashboard.html' : 'customer-dashboard.html';
+                    }, 1500);
+                    
+                }, 1500);
+            });
+            
+            // الدخول برقم الهاتف فقط
+            document.getElementById('phoneLoginBtn').addEventListener('click', function() {
+                const phone = prompt('أدخل رقم هاتفك للدخول:');
+                if (phone && validatePhone(phone)) {
+                    showMessage('info', 'جاري إرسال رمز التحقق...');
+                    
+                    setTimeout(() => {
+                        const code = prompt('أدخل الرمز المرسل إلى ' + phone + ':');
+                        if (code === '123456') { // رمز تجريبي
+                            const userType = document.querySelector('.user-type-btn.active').dataset.type;
+                            const userData = {
+                                id: 'user_' + Date.now(),
+                                phone: phone,
+                                full_name: 'مستخدم تجريبي',
+                                type: userType
+                            };
+                            
+                            localStorage.setItem('travel_session', JSON.stringify({
+                                user: userData,
+                                type: userType,
+                                timestamp: Date.now()
+                            }));
+                            
+                            showMessage('success', 'تم تسجيل الدخول بنجاح!');
+                            
+                            setTimeout(() => {
+                                window.location.href = userType === 'driver' ? 
+                                    'driver-dashboard.html' : 'customer-dashboard.html';
+                            }, 1500);
+                        } else {
+                            showMessage('error', 'رمز التحقق غير صحيح');
+                        }
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
