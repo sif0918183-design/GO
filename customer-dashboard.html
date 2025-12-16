@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الزبون - ترحال</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard customer-dashboard">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <a href="index.html" class="logo">🚗 ترحال</a>
+                <div class="user-info">
+                    <span id="userName">أحمد محمد</span>
+                    <span class="user-type">زبون</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button class="btn-notification" id="notificationBtn">
+                    🔔 <span class="badge" id="notificationCount">2</span>
+                </button>
+                <div class="wallet">
+                    <span>رصيد:</span>
+                    <span class="wallet-amount" id="userBalance">25,000 SDG</span>
+                </div>
+                <button class="btn-logout" id="logoutBtn">تسجيل خروج</button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <!-- Request Trip Section -->
+            <section class="request-trip-section">
+                <div class="trip-form">
+                    <h2>أين تريد الذهاب؟</h2>
+                    
+                    <div class="location-inputs">
+                        <div class="input-group">
+                            <label for="pickupLocation">📍 موقع الالتقاط</label>
+                            <input type="text" id="pickupLocation" 
+                                   placeholder="أدخل موقعك الحالي أو اختر من الخريطة">
+                            <button class="btn-location" id="detectLocationBtn">
+                                تحديد الموقع الحالي
+                            </button>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="dropoffLocation">🏁 الوجهة</label>
+                            <input type="text" id="dropoffLocation" 
+                                   placeholder="أين تريد الذهاب؟">
+                        </div>
+                    </div>
+                    
+                    <div class="car-types">
+                        <h3>اختر نوع السيارة:</h3>
+                        <div class="car-options">
+                            <div class="car-option active" data-type="standard">
+                                <div class="car-icon">🚗</div>
+                                <span>عادي</span>
+                                <small>3,000 SDG</small>
+                            </div>
+                            <div class="car-option" data-type="comfort">
+                                <div class="car-icon">🚙</div>
+                                <span>مريح</span>
+                                <small>4,500 SDG</small>
+                            </div>
+                            <div class="car-option" data-type="van">
+                                <div class="car-icon">🚐</div>
+                                <span>فان</span>
+                                <small>6,000 SDG</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary btn-large" id="requestTripBtn">
+                        🚖 اطلب رحلة الآن
+                    </button>
+                </div>
+                
+                <div class="trip-map" id="tripMap">
+                    <!-- خريطة بسيطة -->
+                    <div class="map-placeholder">
+                        <div class="map-points">
+                            <div class="point pickup">📍</div>
+                            <div class="route-line"></div>
+                            <div class="point dropoff">🏁</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Trip -->
+            <section class="active-trip-section" id="activeTripSection" style="display: none;">
+                <h3>رحلة قيد التنفيذ</h3>
+                <div class="trip-details">
+                    <div class="driver-info">
+                        <div class="driver-avatar">👨‍✈️</div>
+                        <div>
+                            <div class="driver-name" id="activeDriverName">محمد أحمد</div>
+                            <div class="car-info" id="activeCarInfo">تويوتا كامري 2020</div>
+                            <div class="driver-rating">⭐ 4.8 (120 تقييم)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-status">
+                        <div class="status-item">
+                            <span>الحالة:</span>
+                            <span class="status-badge ongoing" id="tripStatus">في الطريق إليك</span>
+                        </div>
+                        <div class="status-item">
+                            <span>الوقت المتبقي:</span>
+                            <span class="time-remaining" id="timeRemaining">5 دقائق</span>
+                        </div>
+                        <div class="status-item">
+                            <span>التكلفة:</span>
+                            <span class="trip-fare" id="tripFare">3,000 SDG</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-actions">
+                        <button class="btn-outline" id="contactDriverBtn">✆ اتصل بالسائق</button>
+                        <button class="btn-danger" id="cancelTripBtn">❌ إلغاء الرحلة</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trip History -->
+            <section class="history-section">
+                <h3>رحلاتي السابقة</h3>
+                <div class="history-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>من</th>
+                                <th>إلى</th>
+                                <th>السائق</th>
+                                <th>التكلفة</th>
+                                <th>التقييم</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tripsHistory">
+                            <!-- سيتم تعبئته بواسطة JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-history" id="noHistoryMessage">
+                    <p>لا توجد رحلات سابقة</p>
+                    <p>ابدأ برحلتك الأولى الآن!</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Trip Modal -->
+        <div class="modal-overlay" id="tripModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>جاري البحث عن سائق</h3>
+                    <div class="loader" id="searchLoader"></div>
+                </div>
+                <div class="modal-body">
+                    <div class="searching-drivers">
+                        <p>جاري البحث عن أقرب سائق متاح...</p>
+                        <div class="drivers-found" id="driversFound">
+                            <span>تم العثور على</span>
+                            <span class="count">3</span>
+                            <span>سائق في منطقتك</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-estimate">
+                        <div class="estimate-item">
+                            <span>التكلفة التقديرية:</span>
+                            <span id="estimatedFare">3,000 SDG</span>
+                        </div>
+                        <div class="estimate-item">
+                            <span>المسافة:</span>
+                            <span id="estimatedDistance">5.2 كم</span>
+                        </div>
+                        <div class="estimate-item">
+                            <span>الوقت المتوقع:</span>
+                            <span id="estimatedTime">15 دقيقة</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-danger" id="cancelSearchBtn">إلغاء البحث</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/customer-dashboard.js"></script>
+</body>
+</html>
