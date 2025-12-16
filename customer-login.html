@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل دخول الزبون - ترحال</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="index.html" class="logo">🚗 ترحال</a>
+                <h2>تسجيل دخول الزبون</h2>
+                <p>أدخل رقم هاتفك للدخول إلى حسابك</p>
+            </div>
+            
+            <form id="customerLoginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginPhone">رقم الموبايل</label>
+                    <div class="phone-input">
+                        <span class="country-code">+249</span>
+                        <input type="tel" id="loginPhone" 
+                               placeholder="912345678" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">كلمة المرور</label>
+                    <input type="password" id="loginPassword" 
+                           placeholder="أدخل كلمة المرور" required>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox">
+                        <input type="checkbox" id="rememberMe">
+                        <span>تذكرني</span>
+                    </label>
+                    <a href="forgot-password.html" class="forgot-link">
+                        نسيت كلمة المرور؟
+                    </a>
+                </div>
+                
+                <button type="submit" class="btn-primary btn-block">
+                    تسجيل الدخول
+                </button>
+                
+                <div class="auth-divider">
+                    <span>أو</span>
+                </div>
+                
+                <button type="button" class="btn-outline btn-block" id="phoneLoginBtn">
+                    الدخول برقم الموبايل فقط
+                </button>
+                
+                <div class="auth-footer">
+                    <p>ليس لديك حساب؟ <a href="register.html">سجل الآن</a></p>
+                    <p>هل أنت سائق؟ <a href="driver-login.html">تسجيل دخول السائق</a></p>
+                </div>
+            </form>
+            
+            <!-- Phone Verification Modal -->
+            <div class="modal-overlay" id="phoneVerificationModal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>التحقق من رقم الموبايل</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>أدخل الرمز المرسل إلى <span id="verifyPhoneNumber"></span></p>
+                        
+                        <div class="verification-inputs">
+                            <input type="text" maxlength="1" class="verify-input">
+                            <input type="text" maxlength="1" class="verify-input">
+                            <input type="text" maxlength="1" class="verify-input">
+                            <input type="text" maxlength="1" class="verify-input">
+                            <input type="text" maxlength="1" class="verify-input">
+                            <input type="text" maxlength="1" class="verify-input">
+                        </div>
+                        
+                        <div class="verification-timer">
+                            <span id="resendTimer">02:00</span>
+                            <button type="button" class="btn-text" id="resendCodeBtn" disabled>
+                                إعادة إرسال الرمز
+                            </button>
+                        </div>
+                        
+                        <button type="button" class="btn-primary" id="verifyCodeBtn">
+                            تحقق
+                        </button>
+                        <button type="button" class="btn-outline" id="cancelVerificationBtn">
+                            إلغاء
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/customer-login.js"></script>
+</body>
+</html>
