@@ -5,8 +5,8 @@ const SUPABASE_ANON_KEY = 'your-anon-key';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // JSONBin.io configuration for storing temporary data
-const JSONBIN_API_KEY = '$2a$10$your-jsonbin-api-key';
-const JSONBIN_BIN_ID = 'your-bin-id';
+const JSONBIN_API_KEY = '$2a$10$.o4BAbiMjGS4tEZUVokTsufL18lsFyO30xIOXO8wT4dP/sqGN/61e';
+const JSONBIN_BIN_ID = '694130b343b1c97be9f1ea04';
 
 // Initialize JSONBin
 async function updateJSONBin(data) {
