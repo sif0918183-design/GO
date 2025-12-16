@@ -1,3 +1,30 @@
+// في أعلى ملف JavaScript الرئيسي
+if (typeof supabase === 'undefined') {
+    console.error('مكتبة Supabase غير محملة!');
+    // تحميل المكتبة ديناميكياً
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = () => {
+        console.log('✅ تم تحميل Supabase بنجاح');
+        // أعادة تهيئة النظام بعد تحميل المكتبة
+        initializeSystem();
+    };
+    script.onerror = () => {
+        console.error('❌ فشل تحميل مكتبة Supabase');
+        showMessage('error', 'فشل تحميل مكتبة قاعدة البيانات');
+    };
+    document.head.appendChild(script);
+}
+
+// تأكد من وجود supabaseClient
+if (typeof supabaseClient === 'undefined' && typeof supabase !== 'undefined') {
+    console.log('🔄 جاري تهيئة Supabase Client...');
+    const supabaseClient = supabase.createClient(
+        'https://yfumkrfhccwvvfiimhjr.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdW1rcmZoY2N3dnZmaWltaGpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4NDYyODEsImV4cCI6MjA4MTQyMjI4MX0.iT6dqwPZhhAb3Y9ZvR_CbHJw9on-CS5OCWoiSC95FOI'
+    );
+    console.log('✅ تم تهيئة Supabase Client');
+}
 // js/simple-init.js - ملف مبسط للتهيئة
 class SimpleSystemInitializer {
     constructor() {
