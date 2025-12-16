@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+    <!-- الخلفية -->
+    <rect width="800" height="600" fill="#f8f9fa"/>
+    
+    <!-- السماء -->
+    <rect x="0" y="0" width="800" height="300" fill="#e3f2fd"/>
+    
+    <!-- شمس -->
+    <circle cx="700" cy="80" r="40" fill="#FFD700"/>
+    
+    <!-- سحابات -->
+    <circle cx="100" cy="100" r="30" fill="white"/>
+    <circle cx="130" cy="90" r="35" fill="white"/>
+    <circle cx="160" cy="100" r="30" fill="white"/>
+    
+    <!-- طريق -->
+    <rect x="0" y="350" width="800" height="80" fill="#555"/>
+    <rect x="0" y="370" width="800" height="4" fill="#FFD700"/>
+    <rect x="0" y="386" width="800" height="4" fill="#FFD700"/>
+    
+    <!-- خطوط الطريق -->
+    <rect x="0" y="390" width="800" height="2" fill="white" stroke-dasharray="20,20">
+        <animate attributeName="x" from="-800" to="800" dur="5s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- سيارة ترحال (سيارة تاكسي) -->
+    <g transform="translate(400, 320)">
+        <!-- هيكل السيارة -->
+        <rect x="-80" y="-40" width="160" height="60" rx="10" fill="#FFD700"/>
+        <rect x="-60" y="-70" width="120" height="30" rx="8" fill="#FFD700"/>
+        
+        <!-- شبابيك -->
+        <rect x="-50" y="-65" width="40" height="20" rx="4" fill="#1a73e8"/>
+        <rect x="10" y="-65" width="40" height="20" rx="4" fill="#1a73e8"/>
+        
+        <!-- إطارات -->
+        <circle cx="-45" cy="20" r="20" fill="#333"/>
+        <circle cx="45" cy="20" r="20" fill="#333"/>
+        <circle cx="-45" cy="20" r="8" fill="#666"/>
+        <circle cx="45" cy="20" r="8" fill="#666"/>
+        
+        <!-- شعار ترحال -->
+        <text x="0" y="-10" text-anchor="middle" fill="#2c3e50" font-family="Arial" font-weight="bold" font-size="14">
+            ترحال
+        </text>
+    </g>
+    
+    <!-- أبراج مدينة الخرطوم -->
+    <rect x="50" y="200" width="40" height="150" fill="#4a6572"/>
+    <rect x="60" y="150" width="20" height="50" fill="#34495e"/>
+    
+    <rect x="120" y="220" width="30" height="130" fill="#5d8ca8"/>
+    <rect x="125" y="180" width="20" height="40" fill="#2c3e50"/>
+    
+    <rect x="200" y="180" width="35" height="170" fill="#f39c12"/>
+    <rect x="210" y="140" width="15" height="40" fill="#d35400"/>
+    
+    <rect x="280" y="210" width="25" height="140" fill="#27ae60"/>
+    <rect x="285" y="170" width="15" height="40" fill="#1e8449"/>
+    
+    <!-- أشجار نخيل -->
+    <g transform="translate(600, 300)">
+        <!-- جذع النخلة -->
+        <rect x="-5" y="0" width="10" height="80" fill="#8B4513"/>
+        <!-- سعف النخلة -->
+        <path d="M -40,0 Q 0,-60 40,0" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+        <path d="M -30,-10 Q 0,-50 30,-10" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+        <path d="M -20,-20 Q 0,-40 20,-20" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+    </g>
+    
+    <g transform="translate(700, 320)">
+        <rect x="-5" y="0" width="10" height="60" fill="#8B4513"/>
+        <path d="M -35,0 Q 0,-50 35,0" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+        <path d="M -25,-15 Q 0,-40 25,-15" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+    </g>
+    
+    <!-- علم السودان -->
+    <g transform="translate(100, 100)">
+        <!-- مستطيلات العلم -->
+        <rect x="0" y="0" width="60" height="15" fill="#d21034"/>
+        <rect x="0" y="15" width="60" height="15" fill="white"/>
+        <rect x="0" y="30" width="60" height="15" fill="black"/>
+        <rect x="0" y="15" width="15" height="15" fill="#007229"/>
+        <!-- المثلث الأخضر -->
+        <polygon points="0,0 15,7.5 0,15" fill="#007229"/>
+    </g>
+    
+    <!-- نص ترحال -->
+    <text x="400" y="500" text-anchor="middle" font-family="Arial" font-size="24" font-weight="bold" fill="#2c3e50">
+        ترحال السودان - خدمة النقل الذكي
+    </text>
+    
+    <!-- رسوم متحركة بسيطة (المزيد من السيارات) -->
+    <g transform="translate(200, 320)">
+        <rect x="-40" y="-30" width="80" height="40" rx="8" fill="#3498db"/>
+        <circle cx="-25" cy="10" r="15" fill="#333"/>
+        <circle cx="25" cy="10" r="15" fill="#333"/>
+    </g>
+    
+    <g transform="translate(650, 320)">
+        <rect x="-40" y="-30" width="80" height="40" rx="8" fill="#e74c3c"/>
+        <circle cx="-25" cy="10" r="15" fill="#333"/>
+        <circle cx="25" cy="10" r="15" fill="#333"/>
+    </g>
+</svg>
