@@ -1,94 +1,149 @@
-// js/main.js - الملف الرئيسي للوظائف العامة في ترحال السودان
+// js/main.js - الملف الرئيسي للوظائف العامة
+// في بداية js/main.js
+console.log('🚀 بدء تحميل نظام ترحال...');
 
-// =======================================================
-// 1. التحقق من تحميل المكتبات الخارجية (Supabase)
-// =======================================================
-
-// في حال تم تحميل هذا الملف قبل supabase-config.js
+// تأكد من تحميل Supabase قبل أي شيء
 if (typeof supabase === 'undefined') {
-    console.warn('⚠️ مكتبة Supabase لم يتم تحميلها بعد. جاري التحقق من التحميل الديناميكي...');
+    console.error('❌ مكتبة Supabase غير محملة!');
     
-    // إذا لم تكن المكتبة محملة، قم بتحميلها ديناميكياً
+    // حل سريع: أضف المكتبة ديناميكياً
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
     script.onload = () => {
-        console.log('✅ تم تحميل Supabase بنجاح ديناميكياً.');
-        // إعادة تهيئة الخدمات بعد تحميل المكتبة إذا لزم الأمر
-        // (يفترض أن هذا يتم بالفعل عبر init.html)
-    };
-    script.onerror = () => {
-        console.error('❌ فشل تحميل مكتبة Supabase.');
-        // يمكن إضافة دالة showMessage هنا إذا كانت معرفة بالفعل
+        console.log('✅ تم تحميل Supabase بنجاح');
+        window.supabaseLoaded = true;
+        initSystem(); // استدعاء دالة التهيئة بعد التحميل
     };
     document.head.appendChild(script);
+} else {
+    console.log('✅ مكتبة Supabase محملة بالفعل');
+    initSystem();
 }
 
-// =======================================================
-// 2. إعداد وتفعيل أحداث DOM
-// =======================================================
+// دالة التهيئة الرئيسية
+function initSystem() {
+    console.log('🔧 بدء تهيئة النظام...');
+    
+    // 1. إنشاء supabaseClient
+    window.supabaseClient = supabase.createClient(
+        'https://yfumkrfhccwvvfiimhjr.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdW1rcmZoY2N3dnZmaWltaGpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4NDYyODEsImV4cCI6MjA4MTQyMjI4MX0.iT6dqwPZhhAb3Y9ZvR_CbHJw9on-CS5OCWoiSC95FOI'
+    );
+    
+    console.log('✅ تم إنشاء supabaseClient:', window.supabaseClient);
+    
+    // 2. اختبار الاتصال
+    testConnection();
+}
 
+// اختبار الاتصال
+async function testConnection() {
+    try {
+        console.log('🔄 اختبار اتصال قاعدة البيانات...');
+        
+        const { data, error } = await window.supabaseClient
+            .from('users')
+            .select('count', { count: 'exact', head: true });
+            
+        if (error) {
+            console.log('⚠️ رسالة الخطأ:', error.message);
+            if (error.message.includes('does not exist')) {
+                console.log('📝 الجداول غير موجودة بعد. قم بتشغيل SQL script في Supabase.');
+                showMessage('warning', 'الجداول غير موجودة. يرجى تشغيل SQL script في Supabase.');
+            } else {
+                console.log('❌ خطأ في الاتصال:', error);
+                showMessage('error', 'خطأ في الاتصال بقاعدة البيانات: ' + error.message);
+            }
+        } else {
+            console.log('✅ اتصال ناجح! عدد المستخدمين:', data);
+            showMessage('success', 'تم الاتصال بقاعدة البيانات بنجاح!');
+            
+            // متابعة التهيئة
+            initializeServices();
+        }
+    } catch (error) {
+        console.error('❌ خطأ غير متوقع:', error);
+        showMessage('error', 'خطأ غير متوقع: ' + error.message);
+    }
+}
+
+// تهيئة الخدمات الأخرى
+function initializeServices() {
+    console.log('⚙️ تهيئة الخدمات...');
+    // ... باقي الكود
+}
 document.addEventListener('DOMContentLoaded', function() {
-    // تفعيل القائمة المتنقلة (Mobile Menu)
-    setupMobileMenu();
-    
-    // تحميل ترويسات الصفحات المفقودة (لإظهار رسالة 'قيد التطوير')
-    loadMissingHeaders();
-    
-    // التحقق من حالة تسجيل الدخول وتحديث أزرار المصادقة
-    checkAuthStatus();
-    
-    // إضافة أنماط الرسائل المنبثقة عند تحميل الصفحة
-    addMessageStyles();
-});
-
-// =======================================================
-// 3. وظائف تفعيل واجهة المستخدم (UI Functions)
-// =======================================================
-
-function setupMobileMenu() {
+    // تفعيل القائمة المتنقلة
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
+    
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+        
+        // إغلاق القائمة عند النقر على رابط
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.textContent = '☰';
+            });
+        });
+    }
+    
+    // تحميل ترويسات الصفحات المفقودة
+    loadMissingHeaders();
+    
+    // التحقق من حالة تسجيل الدخول
+    checkAuthStatus();
+});
 
-    if (menuToggle && navLinks) {  
-        menuToggle.addEventListener('click', function() {  
-            navLinks.classList.toggle('active');  
-            menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';  
-        });  
-          
-        // إغلاق القائمة عند النقر على رابط  
-        document.querySelectorAll('.nav-links a').forEach(link => {  
-            link.addEventListener('click', () => {  
-                navLinks.classList.remove('active');  
-                menuToggle.textContent = '☰';  
-            });  
-        });  
-    }  
-}
-
+// تحميل ترويسات الصفحات المفقودة
 function loadMissingHeaders() {
-    // قائمة بالصفحات غير الموجودة حالياً
+    // قائمة بالصفحات غير الموجودة
     const missingPages = [
-        'about.html', 'how-it-works.html', 'pricing.html', 
-        'driver-register.html', 'login.html', 'register.html', 
-        'driver-requirements.html', 'driver-earnings.html', 
-        'driver-center.html', 'contact.html', 'help.html', 
-        'terms.html', 'privacy.html', 'safety.html'
+        'about.html',
+        'how-it-works.html', 
+        'pricing.html',
+        'driver-register.html',
+        'login.html',
+        'register.html',
+        'driver-requirements.html',
+        'driver-earnings.html',
+        'driver-center.html',
+        'contact.html',
+        'help.html',
+        'terms.html',
+        'privacy.html',
+        'safety.html'
     ];
-
-    // استبدال الروابط بصفحات قيد التطوير مؤقتاً  
-    document.querySelectorAll('a').forEach(link => {  
-        const href = link.getAttribute('href');  
-        if (missingPages.includes(href)) {  
-            link.addEventListener('click', function(e) {  
-                // في مرحلة التطوير، نفترض أن كل الصفحات غير موجودة
-                e.preventDefault();  
-                showComingSoon(href);  
-            });  
-        }  
+    
+    // استبدال الروابط بصفحات قيد التطوير مؤقتاً
+    document.querySelectorAll('a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (missingPages.includes(href)) {
+            link.addEventListener('click', function(e) {
+                if (!pageExists(href)) {
+                    e.preventDefault();
+                    showComingSoon(href);
+                }
+            });
+        }
     });
 }
 
+function pageExists(page) {
+    // في مرحلة التطوير، كل الصفحات غير موجودة
+    return false;
+}
+
 function showComingSoon(pageName) {
+    const pageTitle = getPageTitle(pageName);
+    alert(`⏳ ${pageTitle} قيد التطوير\n\nسيتم إطلاق هذه الصفحة قريباً!`);
+}
+
+function getPageTitle(pageName) {
     const titles = {
         'about.html': 'عن ترحال',
         'how-it-works.html': 'كيف تعمل',
@@ -105,50 +160,38 @@ function showComingSoon(pageName) {
         'privacy.html': 'سياسة الخصوصية',
         'safety.html': 'السلامة'
     };
-    const pageTitle = titles[pageName] || 'هذه الصفحة';
-    alert(`⏳ ${pageTitle} قيد التطوير\n\nسيتم إطلاق هذه الصفحة قريباً!`);
+    return titles[pageName] || 'هذه الصفحة';
 }
 
-// =======================================================
-// 4. وظائف المصادقة (Auth Functions)
-// =======================================================
-
+// التحقق من حالة المصادقة
 function checkAuthStatus() {
     const authButtons = document.querySelector('.auth-buttons');
     if (!authButtons) return;
-
-    // استخدام localStorage لتخزين الجلسة
-    const session = localStorage.getItem('travel_session');  
-    if (session) {  
-        const { user, type } = JSON.parse(session);  
-          
-        // تغيير أزرار المصادقة  
-        authButtons.innerHTML = `  
-            <a href="${type === 'driver' ? 'driver-dashboard.html' : 'customer-dashboard.html'}"   
-               class="btn-outline">لوحة التحكم</a>  
-            <a href="#" class="btn-primary" id="logoutBtn">تسجيل خروج</a>  
-        `;  
-          
-        // إضافة حدث تسجيل الخروج  
-        document.getElementById('logoutBtn')?.addEventListener('click', logout);  
+    
+    const session = localStorage.getItem('travel_session');
+    if (session) {
+        const { user, type } = JSON.parse(session);
+        
+        // تغيير أزرار المصادقة
+        authButtons.innerHTML = `
+            <a href="${type === 'driver' ? 'driver-dashboard.html' : 'customer-dashboard.html'}" 
+               class="btn-outline">لوحة التحكم</a>
+            <a href="#" class="btn-primary" id="logoutBtn">تسجيل خروج</a>
+        `;
+        
+        // إضافة حدث تسجيل الخروج
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
     }
 }
 
 // تسجيل الخروج
 function logout() {
-    // ⚠️ ملاحظة: يمكن استخدام window.supabaseClient.auth.signOut() هنا
-    // لتسجيل الخروج الفعلي من Supabase.
-    
     localStorage.removeItem('travel_session');
     window.location.href = 'index.html';
 }
 
-// =======================================================
-// 5. وظائف المساعدة العامة (Utility Functions)
-// =======================================================
-
+// وظائف المساعدة العامة
 function formatCurrency(amount) {
-    // تنسيق العملة بالريال السوداني (SDG)
     return new Intl.NumberFormat('ar-SD', {
         style: 'currency',
         currency: 'SDG',
@@ -157,7 +200,6 @@ function formatCurrency(amount) {
 }
 
 function formatDate(date) {
-    // تنسيق التاريخ والوقت
     return new Date(date).toLocaleDateString('ar-SA', {
         year: 'numeric',
         month: 'long',
@@ -167,49 +209,40 @@ function formatDate(date) {
     });
 }
 
-// تحقق من رقم الهاتف (صيغة سودانية)
-function validatePhone(phone) {
-    // مثال: +2499xxxxxxx أو 09xxxxxxx أو 1xxxxxxx
-    const regex = /^((\+249|0)?[91][0-9]{8})$/;
-    return regex.test(phone);
-}
-
-// =======================================================
-// 6. نظام الرسائل المنبثقة (Toast/Message System)
-// =======================================================
-
 // إظهار رسالة للمستخدم
 function showMessage(type, message, duration = 5000) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
-    messageDiv.innerHTML = `<div class="message-content">
-        <span class="message-icon">${getMessageIcon(type)}</span>
-        <span>${message}</span>
-        <button class="message-close">&times;</button>
-    </div>`;
-
-    document.body.appendChild(messageDiv);  
-      
-    // إضافة تأثير الظهور  
-    setTimeout(() => messageDiv.classList.add('show'), 10);  
-      
-    // إغلاق الرسالة  
-    const closeBtn = messageDiv.querySelector('.message-close');  
-    closeBtn.addEventListener('click', () => {  
-        messageDiv.classList.remove('show');  
-        setTimeout(() => messageDiv.remove(), 300);  
-    });  
-      
-    // إغلاق تلقائي بعد المدة  
-    if (duration > 0) {  
-        setTimeout(() => {  
-            if (messageDiv.parentNode) {  
-                messageDiv.classList.remove('show');  
-                setTimeout(() => messageDiv.remove(), 300);  
-            }  
-        }, duration);  
-    }  
-      
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            <span class="message-icon">${getMessageIcon(type)}</span>
+            <span>${message}</span>
+            <button class="message-close">&times;</button>
+        </div>
+    `;
+    
+    document.body.appendChild(messageDiv);
+    
+    // إضافة تأثير الظهور
+    setTimeout(() => messageDiv.classList.add('show'), 10);
+    
+    // إغلاق الرسالة
+    const closeBtn = messageDiv.querySelector('.message-close');
+    closeBtn.addEventListener('click', () => {
+        messageDiv.classList.remove('show');
+        setTimeout(() => messageDiv.remove(), 300);
+    });
+    
+    // إغلاق تلقائي بعد المدة
+    if (duration > 0) {
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.classList.remove('show');
+                setTimeout(() => messageDiv.remove(), 300);
+            }
+        }, duration);
+    }
+    
     return messageDiv;
 }
 
@@ -223,16 +256,20 @@ function getMessageIcon(type) {
     return icons[type] || '💡';
 }
 
-// إضافة أنماط الرسائل المنبثقة (CSS Injected via JS)
-function addMessageStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
+// تحقق من رقم الهاتف
+function validatePhone(phone) {
+    const regex = /^(\+249|0)?(9|1)[0-9]{8}$/;
+    return regex.test(phone);
+}
+
+// إضافة أنماط الرسائل
+const style = document.createElement('style');
+style.textContent = `
     .message {
         position: fixed;
         top: 20px;
-        /* استخدام right و left معًا وتطبيق transform لضمان المركزية في RTL */
         left: 50%;
-        transform: translateX(50%) translateY(-100px); 
+        transform: translateX(-50%) translateY(-100px);
         background: white;
         border-radius: 10px;
         box-shadow: 0 5px 20px rgba(0,0,0,0.2);
@@ -241,57 +278,53 @@ function addMessageStyles() {
         max-width: 500px;
         opacity: 0;
         transition: all 0.3s ease;
-        text-align: right; /* ضمان أن النص داخل الرسالة يبدأ من اليمين */
     }
-
-    .message.show {  
-        transform: translateX(50%) translateY(0);  
-        opacity: 1;  
-    }  
-      
-    /* تعديل border-right إلى border-left ليتناسب مع RTL */
-    .message.success {  
-        border-left: 4px solid #27ae60;  
-    }  
-      
-    .message.error {  
-        border-left: 4px solid #e74c3c;  
-    }  
-      
-    .message.warning {  
-        border-left: 4px solid #f39c12;  
-    }  
-      
-    .message.info {  
-        border-left: 4px solid #3498db;  
-    }  
-      
-    .message-content {  
-        padding: 15px 20px;  
-        display: flex;  
-        align-items: center;  
-        gap: 10px;  
-    }  
-      
-    .message-icon {  
-        font-size: 20px;  
-    }  
-      
-    .message-close {  
-        background: none;  
-        border: none;  
-        font-size: 24px;  
-        cursor: pointer;  
-        /* استخدام margin-left: auto في RTL لتحريك زر الإغلاق لليسار */
-        margin-left: auto;  
-        color: #999;  
-        padding: 0 5px;  
-    }  
-      
-    .message-close:hover {  
-        color: #333;  
+    
+    .message.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
     }
-    `;
+    
+    .message.success {
+        border-right: 4px solid #27ae60;
+    }
+    
+    .message.error {
+        border-right: 4px solid #e74c3c;
+    }
+    
+    .message.warning {
+        border-right: 4px solid #f39c12;
+    }
+    
+    .message.info {
+        border-right: 4px solid #3498db;
+    }
+    
+    .message-content {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .message-icon {
+        font-size: 20px;
+    }
+    
+    .message-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        margin-right: auto;
+        color: #999;
+        padding: 0 5px;
+    }
+    
+    .message-close:hover {
+        color: #333;
+    }
+`;
 
-    document.head.appendChild(style);
-}
+document.head.appendChild(style);
