@@ -1,20 +1,11 @@
 {
+  "version": 2,
+  "public": true,
   "cleanUrls": true,
-  "trailingSlash": false,
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/js/(.*)", "destination": "/js/$1" },
     { "source": "/css/(.*)", "destination": "/css/$1" },
-    { "source": "/((?!api|js|css|assets|.*\\.html$).*)", "destination": "/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https://*.supabase.co https://api.jsonbin.io;"
-        }
-      ]
-    }
+    { "source": "/((?!js|css|assets|.*\\.html$).*)", "destination": "/index.html" }
   ]
 }
