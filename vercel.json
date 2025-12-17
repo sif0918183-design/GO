@@ -1,11 +1,6 @@
 {
   "version": 2,
-  "public": true,
   "cleanUrls": true,
-  "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/js/(.*)", "destination": "/js/$1" },
-    { "source": "/css/(.*)", "destination": "/css/$1" },
-    { "source": "/((?!js|css|assets|.*\\.html$).*)", "destination": "/index.html" }
-  ]
+  "trailingSlash": false,
+  "public": true
 }
