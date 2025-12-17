@@ -18,3 +18,25 @@
     }
   ]
 }
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/js/(.*)",
+      "destination": "/js/$1"
+    },
+    {
+      "source": "/css/(.*)",
+      "destination": "/css/$1"
+    },
+    {
+      "source": "/init.html",
+      "destination": "/init.html"
+    },
+    {
+      "source": "/((?!api|js|css|assets|.*\\.html$).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
