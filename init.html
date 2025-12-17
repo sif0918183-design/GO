@@ -1,107 +1,115 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهيئة النظام - ترحال السودان</title>
-    <!-- مكتبات أساسية -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>🚗 ترحال السودان</h1>
-        <h2>تهيئة النظام والخدمات</h2>
-        <p>نقوم بتهيئة النظام وتحضير جميع الخدمات لضمان تجربة سلسة وآمنة</p>
-        
-        <div id="status" style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-            <h3>حالة التهيئة:</h3>
-            <p id="statusText">جاري التهيئة...</p>
-        </div>
-        
-        <div id="steps" style="text-align: right;">
-            <h3>خطوات التهيئة:</h3>
-            <ul id="stepsList" style="list-style: none; padding: 0;">
-                <li id="step1">1. تحميل مكتبات النظام</li>
-                <li id="step2">2. الاتصال بقاعدة البيانات</li>
-                <li id="step3">3. تهيئة خدمات التخزين</li>
-                <li id="step4">4. بدء الخدمات</li>
-            </ul>
-        </div>
-        
-        <div id="actions" style="margin-top: 40px; display: none;">
-            <button onclick="window.location.href='index.html'" 
-                    style="padding: 15px 30px; background: #f39c12; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
-                الذهاب للصفحة الرئيسية
-            </button>
-        </div>
-    </div>
+<!DOCTYPE html>  
+<html lang="ar" dir="rtl">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>تهيئة النظام - ترحال السودان</title>  
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
+    <link rel="stylesheet" href="css/style.css">  
+</head>  
+<body>  
+    <div class="container">  
+        <h1>🚗 ترحال السودان</h1>  
+        <h2>تهيئة النظام والخدمات</h2>  
+        <p>نقوم بتهيئة النظام وتحضير جميع الخدمات لضمان تجربة سلسة وآمنة</p>  
+        <div id="status" style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">  
+            <h3>حالة التهيئة:</h3>  
+            <p id="statusText">جاري التهيئة...</p>  
+        </div>  
+      
+        <div id="steps" style="text-align: right;">  
+            <h3>خطوات التهيئة:</h3>  
+            <ul id="stepsList" style="list-style: none; padding: 0;">  
+                <li id="step1">1. تحميل مكتبات النظام</li>  
+                <li id="step2">2. الاتصال بقاعدة البيانات</li>  
+                <li id="step3">3. تهيئة خدمات التخزين</li>  
+                <li id="step4">4. بدء الخدمات</li>  
+            </ul>  
+        </div>  
+      
+        <div id="actions" style="margin-top: 40px; display: none;">  
+            <button onclick="window.location.href='index.html'"   
+                    style="padding: 15px 30px; background: #f39c12; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">  
+                الذهاب للصفحة الرئيسية  
+            </button>  
+        </div>  
+    </div>  
 
-    <!-- ملفات JavaScript -->
-    <script src="js/supabase-config.js"></script>
-    <script src="js/init-system.js"></script>
-    
-    <script>
-        // تحديث واجهة المستخدم
-        function updateStep(stepId, status, message) {
-            const stepElement = document.getElementById(`step${stepId}`);
-            if (stepElement) {
-                stepElement.innerHTML = `${stepId}. ${message}`;
-                stepElement.style.color = status === 'success' ? 'green' : 
-                                         status === 'error' ? 'red' : 
-                                         status === 'loading' ? 'orange' : 'black';
-            }
-            
-            document.getElementById('statusText').textContent = message;
+    <script src="js/supabase-config.js"></script>  
+    <script src="js/init-system.js"></script>  
+  
+<script>  
+    // تحديث واجهة المستخدم  
+    function updateStep(stepId, status, message) {  
+        const stepElement = document.getElementById(`step${stepId}`);  
+        if (stepElement) {  
+            stepElement.innerHTML = `${stepId}. ${message}`;  
+            stepElement.style.color = status === 'success' ? 'green' :   
+                                     status === 'error' ? 'red' :   
+                                     status === 'loading' ? 'orange' : 'black';  
+        }  
+          
+        document.getElementById('statusText').textContent = message;  
+    }  
+      
+    // بدء التهيئة  
+    document.addEventListener('DOMContentLoaded', async () => {  
+        updateStep(1, 'loading', 'تحميل مكتبات النظام...');  
+          
+        // 1. تحقق من تحميل المكتبة الأساسية
+        if (typeof supabase === 'undefined') {  
+            updateStep(1, 'error', 'فشل تحميل مكتبة Supabase الأساسية');  
+            return;  
+        }  
+        updateStep(1, 'success', 'تم تحميل المكتبات بنجاح');  
+
+        // 2. التحقق من تهيئة العميل (المشكلة الأصلية)
+        // نستخدم window.supabaseClient كما تم تعريفه في supabase-config.js
+        if (typeof window.supabaseClient === 'undefined') {
+            updateStep(2, 'error', 'فشل تهيئة Supabase Client');
+            document.getElementById('statusText').innerHTML = 
+                '<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>' +
+                'الخطأ: Supabase Client غير مهيأ. تحقق من مفاتيح API ومتغيرات البيئة.';
+            return;
         }
-        
-        // بدء التهيئة
-        document.addEventListener('DOMContentLoaded', async () => {
-            updateStep(1, 'loading', 'تحميل مكتبات النظام...');
-            
-            // تحميل Supabase
-            if (typeof supabase === 'undefined') {
-                updateStep(1, 'error', 'فشل تحميل مكتبة قاعدة البيانات');
-                return;
-            }
-            
-            updateStep(1, 'success', 'تم تحميل المكتبات بنجاح');
-            
-            // بدء تهيئة النظام
-            setTimeout(async () => {
-                updateStep(2, 'loading', 'الاتصال بقاعدة البيانات...');
-                
-                try {
-                    const result = await initializeTravelSystem();
-                    
-                    if (result.success) {
-                        updateStep(2, 'success', 'تم الاتصال بقاعدة البيانات');
-                        updateStep(3, 'success', 'تم تهيئة خدمات التخزين');
-                        updateStep(4, 'success', 'الخدمات نشطة وجاهزة');
-                        
-                        document.getElementById('statusText').innerHTML = 
-                            '<strong style="color: green;">✅ تم تهيئة النظام بنجاح!</strong><br>' +
-                            'يمكنك الآن استخدام جميع خدمات ترحال السودان';
-                        
-                        document.getElementById('actions').style.display = 'block';
-                    } else {
-                        updateStep(2, 'error', 'فشل الاتصال بقاعدة البيانات');
-                        document.getElementById('statusText').innerHTML = 
-                            '<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>' +
-                            'الخطأ: ' + result.error + '<br><br>' +
-                            'يرجى التحقق من:<br>' +
-                            '1. اتصال الإنترنت<br>' +
-                            '2. مفاتيح API في supabase-config.js<br>' +
-                            '3. صلاحيات JSONBin<br>' +
-                            '4. تفعيل CORS في المتصفح<br><br>' +
-                            '<button onclick="location.reload()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">إعادة المحاولة</button>';
-                    }
-                } catch (error) {
-                    updateStep(2, 'error', 'خطأ غير متوقع');
-                    console.error('Error:', error);
-                }
-            }, 1000);
-        });
-    </script>
-</body>
+          
+        // بدء تهيئة النظام (المفترض أن initializeTravelSystem() موجودة في init-system.js)
+        setTimeout(async () => {  
+            updateStep(2, 'loading', 'الاتصال بقاعدة البيانات...');  
+              
+            try {  
+                // الآن، يفترض أن دالة initializeTravelSystem يمكنها الوصول إلى window.supabaseClient
+                const result = await initializeTravelSystem(); 
+                  
+                if (result.success) {  
+                    updateStep(2, 'success', 'تم الاتصال بقاعدة البيانات');  
+                    updateStep(3, 'success', 'تم تهيئة خدمات التخزين');  
+                    updateStep(4, 'success', 'الخدمات نشطة وجاهزة');  
+                      
+                    document.getElementById('statusText').innerHTML =   
+                        '<strong style="color: green;">✅ تم تهيئة النظام بنجاح!</strong><br>' +  
+                        'يمكنك الآن استخدام جميع خدمات ترحال السودان';  
+                      
+                    document.getElementById('actions').style.display = 'block';  
+                } else {  
+                    // في حالة فشل الاتصال بقاعدة البيانات (لكنه تم تهيئته)
+                    updateStep(2, 'error', 'فشل الاتصال بقاعدة البيانات');  
+                    document.getElementById('statusText').innerHTML =   
+                        '<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>' +  
+                        'الخطأ: ' + (result.error || 'غير معروف') + '<br><br>' +  
+                        'يرجى التحقق من:<br>' +  
+                        '1. اتصال الإنترنت<br>' +  
+                        '2. مفاتيح API (URL/Anon Key)<br>' +  
+                        '3. تفعيل CORS<br><br>' +  
+                        '<button onclick="location.reload()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">إعادة المحاولة</button>';  
+                }  
+            } catch (error) {  
+                updateStep(2, 'error', 'خطأ غير متوقع في عملية التهيئة');  
+                console.error('Initialization Error:', error);  
+            }  
+        }, 1000);  
+    });  
+</script>
+
+</body>  
 </html>
