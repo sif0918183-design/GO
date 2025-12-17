@@ -1,257 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلب رحلة - ترحال</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="request-container">
-        <!-- Header -->
-        <header class="request-header">
-            <a href="index.html" class="back-btn">← العودة</a>
-            <div class="header-title">
-                <h1>طلب رحلة جديدة</h1>
-                <p>أدخل تفاصيل رحلتك</p>
-            </div>
-        </header>
-
-        <main class="request-main">
-            <!-- Step Indicator -->
-            <div class="step-indicator">
-                <div class="step active">
-                    <div class="step-number">1</div>
-                    <span>الوجهة</span>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <span>نوع الرحلة</span>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <span>التأكيد</span>
-                </div>
-            </div>
-
-            <!-- Step 1: Locations -->
-            <div class="step-content active" id="step1">
-                <div class="location-inputs">
-                    <div class="input-card pickup">
-                        <div class="input-icon">📍</div>
-                        <div class="input-content">
-                            <label>موقع الالتقاط</label>
-                            <input type="text" id="pickupInput" 
-                                   placeholder="أدخل موقعك الحالي">
-                            <button class="btn-location" id="currentLocationBtn">
-                                استخدام الموقع الحالي
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="input-card dropoff">
-                        <div class="input-icon">🏁</div>
-                        <div class="input-content">
-                            <label>الوجهة</label>
-                            <input type="text" id="dropoffInput" 
-                                   placeholder="أين تريد الذهاب؟">
-                            <div class="saved-locations" id="savedLocations">
-                                <!-- المواقع المحفوظة -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="suggested-locations">
-                    <h4>مواقع مقترحة:</h4>
-                    <div class="location-buttons">
-                        <button class="location-btn" data-location="مطار الخرطوم">
-                            ✈️ مطار الخرطوم
-                        </button>
-                        <button class="location-btn" data-location="سوق أم درمان">
-                            🛍️ سوق أم درمان
-                        </button>
-                        <button class="location-btn" data-location="جامعة الخرطوم">
-                            🎓 جامعة الخرطوم
-                        </button>
-                        <button class="location-btn" data-location="المستشفى السلاح الطبي">
-                            🏥 المستشفى السلاح الطبي
-                        </button>
-                    </div>
-                </div>
-                
-                <button class="btn-primary btn-next" id="nextStep1">
-                    التالي → اختيار السيارة
-                </button>
-            </div>
-
-            <!-- Step 2: Car Type -->
-            <div class="step-content" id="step2">
-                <h3>اختر نوع الرحلة</h3>
-                
-                <div class="car-options">
-                    <div class="car-option active" data-type="standard">
-                        <div class="car-icon">🚗</div>
-                        <div class="car-details">
-                            <h4>عادي</h4>
-                            <p>سيارة مريحة تناسب 4 ركاب</p>
-                            <div class="car-price">
-                                <span>ابتداءً من</span>
-                                <span class="price">3,000 SDG</span>
-                            </div>
-                        </div>
-                        <div class="car-check">✓</div>
-                    </div>
-                    
-                    <div class="car-option" data-type="comfort">
-                        <div class="car-icon">🚙</div>
-                        <div class="car-details">
-                            <h4>مريح</h4>
-                            <p>سيارة فاخرة مع مزايا إضافية</p>
-                            <div class="car-price">
-                                <span>ابتداءً من</span>
-                                <span class="price">4,500 SDG</span>
-                            </div>
-                        </div>
-                        <div class="car-check">✓</div>
-                    </div>
-                    
-                    <div class="car-option" data-type="van">
-                        <div class="car-icon">🚐</div>
-                        <div class="car-details">
-                            <h4>فان</h4>
-                            <p>تناسب 7 ركاب أو أمتعة إضافية</p>
-                            <div class="car-price">
-                                <span>ابتداءً من</span>
-                                <span class="price">6,000 SDG</span>
-                            </div>
-                        </div>
-                        <div class="car-check">✓</div>
-                    </div>
-                </div>
-                
-                <div class="trip-options">
-                    <h4>خيارات إضافية:</h4>
-                    <div class="options-grid">
-                        <label class="option-checkbox">
-                            <input type="checkbox" id="needHelp">
-                            <span>👨‍🦽 أحتاج مساعدة</span>
-                        </label>
-                        <label class="option-checkbox">
-                            <input type="checkbox" id="quietRide">
-                            <span>🤫 رحلة هادئة</span>
-                        </label>
-                        <label class="option-checkbox">
-                            <input type="checkbox" id="extraStops">
-                            <span>🛑 توقفات إضافية</span>
-                        </label>
-                        <label class="option-checkbox">
-                            <input type="checkbox" id="petFriendly">
-                            <span>🐾 مع حيوان أليف</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="step-buttons">
-                    <button class="btn-outline" id="backStep2">← رجوع</button>
-                    <button class="btn-primary" id="nextStep2">
-                        التالي → عرض السعر
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 3: Confirmation -->
-            <div class="step-content" id="step3">
-                <h3>تأكيد الرحلة</h3>
-                
-                <div class="trip-summary">
-                    <div class="summary-item">
-                        <span>الوجهة:</span>
-                        <span id="summaryPickup">موقعك الحالي</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>الوجهة:</span>
-                        <span id="summaryDropoff">المطار الدولي</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>نوع السيارة:</span>
-                        <span id="summaryCarType">عادي</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>المسافة:</span>
-                        <span id="summaryDistance">8.5 كم</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>الوقت المتوقع:</span>
-                        <span id="summaryTime">20 دقيقة</span>
-                    </div>
-                    <div class="summary-item total">
-                        <span>التكلفة الإجمالية:</span>
-                        <span class="total-price" id="summaryPrice">3,000 SDG</span>
-                    </div>
-                </div>
-                
-                <div class="payment-method">
-                    <h4>طريقة الدفع:</h4>
-                    <div class="payment-options">
-                        <div class="payment-option active">
-                            <input type="radio" name="payment" id="cash" checked>
-                            <label for="cash">💵 نقداً عند الوصول</label>
-                        </div>
-                        <div class="payment-option">
-                            <input type="radio" name="payment" id="wallet">
-                            <label for="wallet">💰 محفظة ترحال</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="confirm-terms">
-                    <label class="checkbox">
-                        <input type="checkbox" id="agreeTerms" required>
-                        <span>أوافق على <a href="terms.html">شروط الاستخدام</a></span>
-                    </label>
-                </div>
-                
-                <div class="step-buttons">
-                    <button class="btn-outline" id="backStep3">← رجوع</button>
-                    <button class="btn-primary" id="confirmTripBtn" disabled>
-                        🚖 تأكيد طلب الرحلة
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <!-- Trip Request Modal -->
-        <div class="modal-overlay" id="requestingModal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>جاري طلب الرحلة</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="loading-animation">
-                        <div class="loader"></div>
-                        <p>جاري البحث عن سائق...</p>
-                    </div>
-                    
-                    <div class="searching-info">
-                        <div class="info-item">
-                            <span>تم البحث في:</span>
-                            <span id="searchArea">نطاق 20 كم</span>
-                        </div>
-                        <div class="info-item">
-                            <span>السائقون المتاحون:</span>
-                            <span id="availableDrivers">3 سائقين</span>
-                        </div>
-                    </div>
-                    
-                    <button class="btn-danger" id="cancelRequestBtn">إلغاء الطلب</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/supabase-config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/request-trip.js"></script>
-</body>
-</html>
