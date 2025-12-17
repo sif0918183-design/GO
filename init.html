@@ -62,26 +62,26 @@
             return;  
         }  
         updateStep(1, 'success', 'تم تحميل المكتبات بنجاح');  
-
-        // 2. التحقق من تهيئة العميل (المشكلة الأصلية)
-        // نستخدم window.supabaseClient كما تم تعريفه في supabase-config.js
+        
+        // 2. التحقق الحاسم من تهيئة العميل في النطاق العام (الذي كان سبب المشكلة)
         if (typeof window.supabaseClient === 'undefined') {
             updateStep(2, 'error', 'فشل تهيئة Supabase Client');
             document.getElementById('statusText').innerHTML = 
                 '<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>' +
-                'الخطأ: Supabase Client غير مهيأ. تحقق من مفاتيح API ومتغيرات البيئة.';
-            return;
+                'الخطأ: Supabase Client غير مهيأ. يرجى التحقق من المفاتيح في `supabase-config.js`.';
+            return; // توقف هنا
         }
+        updateStep(2, 'loading', 'الاتصال بقاعدة البيانات...');
           
-        // بدء تهيئة النظام (المفترض أن initializeTravelSystem() موجودة في init-system.js)
+        // 3. بدء عملية التهيئة الفعلية
         setTimeout(async () => {  
-            updateStep(2, 'loading', 'الاتصال بقاعدة البيانات...');  
               
             try {  
-                // الآن، يفترض أن دالة initializeTravelSystem يمكنها الوصول إلى window.supabaseClient
+                // استدعاء الدالة بأمان الآن لأننا تحققنا من وجود العميل
                 const result = await initializeTravelSystem(); 
                   
                 if (result.success) {  
+                    // بما أن initializeTravelSystem تقوم بالتحقق من 2 و 3، سننتقل إلى النجاح النهائي
                     updateStep(2, 'success', 'تم الاتصال بقاعدة البيانات');  
                     updateStep(3, 'success', 'تم تهيئة خدمات التخزين');  
                     updateStep(4, 'success', 'الخدمات نشطة وجاهزة');  
@@ -92,20 +92,20 @@
                       
                     document.getElementById('actions').style.display = 'block';  
                 } else {  
-                    // في حالة فشل الاتصال بقاعدة البيانات (لكنه تم تهيئته)
-                    updateStep(2, 'error', 'فشل الاتصال بقاعدة البيانات');  
+                    updateStep(2, 'error', result.error); 
                     document.getElementById('statusText').innerHTML =   
-                        '<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>' +  
-                        'الخطأ: ' + (result.error || 'غير معروف') + '<br><br>' +  
-                        'يرجى التحقق من:<br>' +  
-                        '1. اتصال الإنترنت<br>' +  
-                        '2. مفاتيح API (URL/Anon Key)<br>' +  
-                        '3. تفعيل CORS<br><br>' +  
-                        '<button onclick="location.reload()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">إعادة المحاولة</button>';  
+                        `<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>
+                        الخطأ: ${result.error}<br><br>
+                        يرجى التحقق من:
+                        <br>1. اتصال الإنترنت
+                        <br>2. مفاتيح API في supabase-config.js
+                        <br>3. صلاحيات قاعدة البيانات/JSONBin
+                        <br>4. تفعيل CORS في المتصفح<br><br>
+                        <button onclick="location.reload()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">إعادة المحاولة</button>`;  
                 }  
             } catch (error) {  
-                updateStep(2, 'error', 'خطأ غير متوقع في عملية التهيئة');  
-                console.error('Initialization Error:', error);  
+                updateStep(2, 'error', 'خطأ غير متوقع');  
+                console.error('Fatal Initialization Error:', error);  
             }  
         }, 1000);  
     });  
