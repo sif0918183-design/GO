@@ -1,71 +1,129 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-config.js"></script>
-</head>
-<body>
-    <h1>🔧 تهيئة نظام ترحال</h1>
-    <div id="status">جاري التهيئة...</div>
+<!DOCTYPE html>  
+<html lang="ar" dir="rtl">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>تهيئة النظام - ترحال السودان</title>  
     
-    <script>
-    async function initialize() {
-        const status = document.getElementById('status');
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
+    
+    <link rel="stylesheet" href="css/style.css">  
+</head>  
+<body>  
+    <div class="container">  
+        <h1>🚗 ترحال السودان</h1>  
+        <h2>تهيئة النظام والخدمات</h2>  
+        <p>نقوم بتهيئة النظام وتحضير جميع الخدمات لضمان تجربة سلسة وآمنة</p>  
         
-        try {
-            status.innerHTML = '1. جاري اختبار اتصال Supabase...';
-            
-            // انتظر تحميل supabaseClient
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            if (!window.supabaseClient) {
-                throw new Error('supabaseClient غير معرف');
-            }
-            
-            // اختبار عملي
-            const { data, error } = await window.supabaseClient
-                .from('users')
-                .select('id, phone, full_name')
-                .limit(3);
-            
-            if (error) {
-                status.innerHTML = `
-                    <h3 style="color: red;">❌ خطأ في Supabase</h3>
-                    <p>${error.message}</p>
-                    <p>${error.details || ''}</p>
-                    <p>${error.hint || ''}</p>
-                    <hr>
-                    <h4>💡 الحل:</h4>
-                    <ol>
-                        <li>افتح <a href="https://supabase.com/dashboard/project/yfumkrfhccwvvfiimhjr/sql" target="_blank">Supabase SQL Editor</a></li>
-                        <li>انسخ كود إنشاء الجداول</li>
-                        <li>اضغط RUN</li>
-                        <li>أعد تحميل هذه الصفحة</li>
-                    </ol>
-                `;
-                return;
-            }
-            
-            status.innerHTML = `
-                <h3 style="color: green;">✅ تهيئة ناجحة!</h3>
-                <p>تم الاتصال بـ Supabase بنجاح</p>
-                <p>عدد المستخدمين: ${data?.length || 0}</p>
-                <button onclick="window.location.href='index.html'">
-                    الانتقال للصفحة الرئيسية
-                </button>
-            `;
-            
-        } catch (error) {
-            status.innerHTML = `
-                <h3 style="color: red;">❌ خطأ</h3>
-                <p>${error.message}</p>
-                <pre>${error.stack}</pre>
-            `;
+        <div id="status" style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">  
+            <h3>حالة التهيئة:</h3>  
+            <p id="statusText">جاري التهيئة...</p>  
+        </div>  
+      
+        <div id="steps" style="text-align: right;">  
+            <h3>خطوات التهيئة:</h3>  
+            <ul id="stepsList" style="list-style: none; padding: 0;">  
+                <li id="step1">1. تحميل مكتبات النظام</li>  
+                <li id="step2">2. الاتصال بقاعدة البيانات</li>  
+                <li id="step3">3. تهيئة خدمات التخزين</li>  
+                <li id="step4">4. بدء الخدمات</li>  
+            </ul>  
+        </div>  
+      
+        <div id="actions" style="margin-top: 40px; display: none;">  
+            <button onclick="window.location.href='index.html'"   
+                    style="padding: 15px 30px; background: #f39c12; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">  
+                الذهاب للصفحة الرئيسية  
+            </button>  
+        </div>  
+    </div>  
+
+    <script src="js/supabase-config.js"></script>  
+
+    <script>
+        // هذا الكود للتأكد من أن supabase-config.js نفذ بنجاح
+        if (typeof window.supabaseClient === 'undefined') {
+            console.error('❌ فشل الاختبار: window.supabaseClient غير مُعرّف بعد تحميل supabase-config.js');
+            // هنا يجب أن تتخذ إجراءً لوقف عملية التهيئة اللاحقة
+        } else {
+             console.log('✅ الاختبار الأولي: window.supabaseClient موجود وجاهز.');
         }
-    }
-    
-    // بدء التهيئة بعد تحميل الصفحة
-    document.addEventListener('DOMContentLoaded', initialize);
+    </script> 
+
+    <script src="js/init-system.js"></script>  
+  
+    <script>  
+        // تحديث واجهة المستخدم  
+        function updateStep(stepId, status, message) {  
+            const stepElement = document.getElementById(`step${stepId}`);  
+            if (stepElement) {  
+                stepElement.innerHTML = `${stepId}. ${message}`;  
+                stepElement.style.color = status === 'success' ? 'green' :   
+                                         status === 'error' ? 'red' :   
+                                         status === 'loading' ? 'orange' : 'black';  
+            }  
+              
+            document.getElementById('statusText').textContent = message;  
+        }  
+          
+        // بدء التهيئة  
+        document.addEventListener('DOMContentLoaded', async () => {  
+            updateStep(1, 'loading', 'تحميل مكتبات النظام...');  
+              
+            // 1. تحقق من تحميل المكتبة الأساسية
+            if (typeof supabase === 'undefined') {  
+                updateStep(1, 'error', 'فشل تحميل مكتبة Supabase الأساسية');  
+                return;  
+            }  
+            updateStep(1, 'success', 'تم تحميل المكتبات بنجاح');  
+            
+            // 2. التحقق الحاسم من تهيئة العميل (للتكرار في واجهة المستخدم)
+            if (typeof window.supabaseClient === 'undefined') {
+                updateStep(2, 'error', 'فشل تهيئة Supabase Client');
+                document.getElementById('statusText').innerHTML = 
+                    '<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>' +
+                    'الخطأ: Supabase Client غير مهيأ. تحقق من: 1. ترتيب الملفات. 2. المفاتيح الثابتة في supabase-config.js.';
+                return; // توقف هنا
+            }
+            updateStep(2, 'loading', 'الاتصال بقاعدة البيانات...');
+              
+            // 3. بدء عملية التهيئة الفعلية
+            setTimeout(async () => {  
+                  
+                try {  
+                    // استدعاء الدالة بأمان الآن
+                    const result = await initializeTravelSystem(); 
+                      
+                    if (result.success) {  
+                        // النجاح
+                        updateStep(2, 'success', 'تم الاتصال بقاعدة البيانات');  
+                        updateStep(3, 'success', 'تم تهيئة خدمات التخزين');  
+                        updateStep(4, 'success', 'الخدمات نشطة وجاهزة');  
+                          
+                        document.getElementById('statusText').innerHTML =   
+                            '<strong style="color: green;">✅ تم تهيئة النظام بنجاح!</strong><br>' +  
+                            'يمكنك الآن استخدام جميع خدمات ترحال السودان';  
+                          
+                        document.getElementById('actions').style.display = 'block';  
+                    } else {  
+                        // الفشل
+                        updateStep(2, 'error', result.error); 
+                        document.getElementById('statusText').innerHTML =   
+                            `<strong style="color: red;">❌ فشل تهيئة النظام</strong><br>
+                            الخطأ: ${result.error || 'خطأ غير محدد من initializeTravelSystem'}<br><br>
+                            يرجى التحقق من:<br>
+                            1. اتصال الإنترنت<br>
+                            2. مفاتيح API<br>
+                            3. صلاحيات قواعد البيانات/التخزين<br><br>
+                            <button onclick="location.reload()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">إعادة المحاولة</button>`;  
+                    }  
+                } catch (error) {  
+                    updateStep(2, 'error', 'خطأ غير متوقع');  
+                    console.error('Fatal Initialization Error:', error);  
+                }  
+            }, 1000);  
+        });  
     </script>
-</body>
+
+</body>  
 </html>
