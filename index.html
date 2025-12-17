@@ -101,5 +101,32 @@
             el.className = `step-item ${status}`;
         }
     </script>
+<script>
+// تسجيل Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log('✅ Service Worker Registered'))
+      .catch(err => console.error('❌ SW Registration Failed', err));
+  });
+}
+
+// دالة فحص الاتصال بـ Supabase (محدثة)
+async function testConnection() {
+    try {
+        // فحص مباشر باستخدام window.supabaseClient المعرف في supabase-config.js
+        const { data, error } = await window.supabaseClient
+            .from('drivers') 
+            .select('id')
+            .limit(1);
+        
+        if (error) throw error;
+        return true;
+    } catch (err) {
+        console.error("Connection Error:", err.message);
+        return false;
+    }
+}
+</script>
 </body>
 </html>
