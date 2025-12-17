@@ -1,173 +1,76 @@
-// js/init-system.js
-// ============================================
-// نظام تهيئة ترحال السودان (نسخة مستقرة)
-// ============================================
+// js/init-system.js - نظام بدء تهيئة ترحال السودان
 
-class TravelSudanSystem {
-    constructor() {
-        this.initialized = false;
-        this.supabase = null;
-        this.syncInterval = null;
+/**
+ * دالة مساعدة لعملية تهيئة خدمات التخزين (JSONBin)
+ * @returns {object} حالة النجاح أو الفشل
+ */
+async function initializeStorageService() {
+    // التحقق من وجود المفتاح في النطاق العام
+    if (typeof window.JSONBIN_API_KEY === 'undefined' || !window.JSONBIN_API_KEY) {
+        return { success: false, error: 'JSONBIN_API_KEY is missing or undefined.' };
     }
 
-    async initialize() {
-        if (this.initialized) {
-            console.warn('⚠️ النظام مهيأ مسبقًا');
+    try {
+        // محاولة جلب البيانات كاختبار بسيط للاتصال
+        const statusData = await getJSONBin(); 
+        
+        if (statusData && statusData.record) {
+            console.log('✅ تم الاتصال بخدمة التخزين بنجاح.');
+            // يمكنك هنا التحقق من سلامة البيانات
             return { success: true };
+        } else {
+             // قد يكون statusData null في حالة وجود خطأ في getJSONBin
+            return { success: false, error: statusData ? statusData.message : 'Failed to retrieve data from JSONBin.' };
         }
 
-        console.log('🚀 بدء تهيئة نظام ترحال السودان...');
-
-        try {
-            /* 1️⃣ التحقق من Supabase Client */
-            if (!window.supabaseClient) {
-                throw new Error('Supabase Client غير موجود');
-            }
-
-            this.supabase = window.supabaseClient;
-            console.log('✅ Supabase Client متاح');
-
-            /* 2️⃣ اختبار الاتصال (الطريقة الصحيحة) */
-            await this.testSupabaseConnection();
-
-            /* 3️⃣ تهيئة JSONBin (اختياري) */
-            await this.initializeJSONBin();
-
-            /* 4️⃣ تحميل البيانات الأولية */
-            await this.loadInitialData();
-
-            /* 5️⃣ بدء الخدمات */
-            await this.startServices();
-
-            this.initialized = true;
-
-            console.log('🎉 تم تهيئة النظام بنجاح');
-            if (typeof showMessage === 'function') {
-                showMessage('success', 'تم تهيئة النظام بنجاح');
-            }
-
-            return { success: true };
-
-        } catch (error) {
-            console.error('❌ فشل تهيئة النظام:', error);
-            if (typeof showMessage === 'function') {
-                showMessage('error', `فشل التهيئة: ${error.message}`);
-            }
-            return { success: false, error: error.message };
-        }
-    }
-
-    /* ============================================
-       اختبار اتصال Supabase (بدون جداول أو RLS)
-       ============================================ */
-    async testSupabaseConnection() {
-        console.log('🔄 اختبار اتصال Supabase...');
-
-        try {
-            const { data, error } = await this.supabase.auth.getSession();
-
-            if (error) {
-                throw error;
-            }
-
-            console.log('✅ Supabase متصل (Auth OK)');
-            return true;
-
-        } catch (error) {
-            console.error('❌ فشل الاتصال بـ Supabase:', error);
-            throw new Error('فشل الاتصال بقاعدة البيانات');
-        }
-    }
-
-    /* ============================================
-       تهيئة JSONBin (اختياري)
-       ============================================ */
-    async initializeJSONBin() {
-        if (
-            typeof getJSONBin !== 'function' ||
-            typeof updateJSONBin !== 'function'
-        ) {
-            console.warn('⚠️ JSONBin غير مهيأ – سيتم التخطي');
-            return false;
-        }
-
-        console.log('🔄 تهيئة JSONBin...');
-
-        try {
-            const data = await getJSONBin();
-
-            if (!data || !data.record) {
-                await updateJSONBin(this.createInitialData());
-                console.log('✅ تم إنشاء بيانات JSONBin أولية');
-            } else {
-                console.log('✅ تم تحميل بيانات JSONBin');
-            }
-
-            return true;
-
-        } catch (error) {
-            console.warn('⚠️ JSONBin غير متاح – النظام سيعمل بدونه');
-            return false;
-        }
-    }
-
-    /* ============================================
-       بيانات أولية
-       ============================================ */
-    createInitialData() {
-        return {
-            system: {
-                name: 'ترحال السودان',
-                version: '1.0.0',
-                initializedAt: new Date().toISOString(),
-                status: 'active'
-            },
-            activeDrivers: [],
-            tripRequests: [],
-            settings: {
-                searchRadiusKm: 20,
-                baseFare: 3000
-            }
-        };
-    }
-
-    /* ============================================
-       تحميل البيانات
-       ============================================ */
-    async loadInitialData() {
-        console.log('📥 تحميل البيانات الأولية...');
-        await new Promise(resolve => setTimeout(resolve, 300));
-        console.log('✅ تم تحميل البيانات');
-    }
-
-    /* ============================================
-       بدء الخدمات
-       ============================================ */
-    async startServices() {
-        console.log('⚙️ بدء الخدمات...');
-
-        this.syncInterval = setInterval(() => {
-            this.syncWithSupabase();
-        }, 30000);
-
-        console.log('✅ الخدمات نشطة');
-    }
-
-    /* ============================================
-       مزامنة (حاليًا وهمية – للتوسعة لاحقًا)
-       ============================================ */
-    async syncWithSupabase() {
-        console.log('🔄 مزامنة البيانات...');
-        // سيتم إضافة منطق المزامنة لاحقًا
+    } catch (e) {
+        console.error('Storage initialization error:', e);
+        return { success: false, error: 'Storage exception: ' + e.message };
     }
 }
 
-/* ============================================
-   إنشاء نسخة واحدة فقط من النظام
-   ============================================ */
-const travelSystem = new TravelSudanSystem();
+/**
+ * الدالة الرئيسية لتهيئة النظام والخدمات
+ * يتم استدعاؤها من init.html
+ * @returns {object} حالة نجاح أو فشل التهيئة بالكامل
+ */
+async function initializeTravelSystem() {
+    // 1. التحقق من وجود عميل Supabase
+    if (typeof window.supabaseClient === 'undefined') {
+        return { success: false, error: 'supabaseClient is not defined.' };
+    }
 
-/* ============================================
-   تصدير دالة التهيئة للاستخدام في init.html
-   ============================================ */
-window.initializeTravelSystem = () => travelSystem.initialize();
+    try {
+        // 2. اختبار الاتصال بقاعدة بيانات Supabase
+        console.log('🔄 جاري اختبار اتصال Supabase...');
+        // نختار جدول بسيط جداً أو نستخدم دالة عامة لعد الصفوف كاختبار
+        const { data, error } = await window.supabaseClient
+            .from('services_status') // يفترض وجود هذا الجدول
+            .select('status_id')
+            .limit(1);
+
+        if (error) {
+            console.error('Supabase DB Connection Error:', error);
+            // إظهار رسالة خطأ واضحة
+            return { success: false, error: 'فشل الاتصال بـ Supabase: ' + error.message };
+        }
+        console.log('✅ تم الاتصال بـ Supabase بنجاح.');
+
+        // 3. تهيئة خدمات التخزين
+        console.log('🔄 جاري تهيئة خدمات التخزين...');
+        const storageResult = await initializeStorageService();
+
+        if (!storageResult.success) {
+            console.error('Storage Service Error:', storageResult.error);
+            return { success: false, error: 'فشل تهيئة التخزين: ' + storageResult.error };
+        }
+        console.log('✅ تم تهيئة خدمات التخزين بنجاح.');
+
+        // 4. تسجيل نجاح التهيئة النهائية
+        return { success: true };
+
+    } catch (e) {
+        console.error('Initialization Process Exception:', e);
+        return { success: false, error: 'خطأ غير متوقع: ' + e.message };
+    }
+}
