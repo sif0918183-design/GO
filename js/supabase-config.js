@@ -6,7 +6,6 @@ if (typeof supabase === 'undefined') {
   console.error('❌ مكتبة Supabase غير محملة');
   throw new Error('يجب تحميل مكتبة Supabase أولاً: https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
 }
-
 // إنشاء العميل
 const supabaseClient = supabase.createClient(
   'https://yfumkrfhccwvvfiimhjr.supabase.co',
