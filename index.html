@@ -1,564 +1,104 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ترحال السودان - التهيئة</title>
+    <title>ترحال السودان - تهيئة النظام</title>
     
-    <!-- مكتبات Leaflet للخرائط -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- الأنماط -->
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* أنماط إضافية لصفحة التهيئة */
-        .init-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .init-hero {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .init-status {
-            margin: 30px auto;
-            padding: 30px;
-            border-radius: 15px;
-            background: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            max-width: 800px;
-        }
-        
-        .init-steps {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            margin: 30px 0;
-        }
-        
-        .step-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin: 10px 0;
-            background: white;
-            border-radius: 10px;
-            border-right: 4px solid #ddd;
-            transition: all 0.3s ease;
-        }
-        
-        .step-item.success {
-            border-right-color: #28a745;
-            background: #f8fff9;
-        }
-        
-        .step-item.loading {
-            border-right-color: #ffc107;
-            background: #fffbf0;
-        }
-        
-        .step-item.error {
-            border-right-color: #dc3545;
-            background: #fff5f5;
-        }
-        
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: #667eea;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 15px;
-            font-weight: bold;
-        }
-        
-        .step-content {
-            flex: 1;
-        }
-        
-        .status-icon {
-            font-size: 24px;
-            margin-left: 15px;
-        }
-        
-        .success { color: #28a745; }
-        .loading { color: #ffc107; }
-        .error { color: #dc3545; }
-        
-        .init-actions {
-            text-align: center;
-            margin-top: 40px;
-            padding: 30px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .action-buttons button {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary-action {
-            background: #667eea;
-            color: white;
-        }
-        
-        .btn-primary-action:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary-action {
-            background: #f8f9fa;
-            color: #333;
-            border: 2px solid #ddd;
-        }
-        
-        .btn-secondary-action:hover {
-            background: #e9ecef;
-            border-color: #667eea;
-        }
-        
-        .init-logo {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        /* تخصيص لشريط التنقل لصفحة التهيئة */
-        .init-navbar {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        
-        @media (max-width: 768px) {
-            .init-container {
-                padding: 10px;
-            }
-            
-            .init-hero {
-                padding: 20px 10px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .action-buttons button {
-                width: 100%;
-            }
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; }
+        .init-container { max-width: 800px; margin: 50px auto; padding: 20px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        .step-item { display: flex; align-items: center; background: #fff; padding: 15px; margin: 10px 0; border-radius: 8px; border-right: 5px solid #ddd; }
+        .step-item.success { border-right-color: #28a745; background: #f0fff4; }
+        .step-item.loading { border-right-color: #ffc107; background: #fffdf0; }
+        .step-item.error { border-right-color: #dc3545; background: #fff5f5; }
+        .btn-start { background: #667eea; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
-    <!-- شريط التنقل -->
-    <nav class="navbar init-navbar">
-        <div class="container">
-            <a href="index.html" class="logo">🚗 ترحال</a>
-            <div class="nav-links">
-                <a href="index.html" class="active">التهيئة</a>
-                <a href="about.html">عن ترحال</a>
-                <a href="how-it-works.html">كيف تعمل</a>
-                <a href="pricing.html">الأسعار</a>
-                <a href="driver-register.html">كن سائقاً</a>
-                <div class="auth-buttons">
-                    <a href="login.html" class="btn-outline">تسجيل دخول</a>
-                    <a href="register.html" class="btn-primary">سجل الآن</a>
-                </div>
-            </div>
-            <button class="menu-toggle">☰</button>
-        </div>
-    </nav>
 
-    <!-- محتوى التهيئة -->
     <div class="init-container">
-        <!-- قسم البطل (Hero Section) معدل للتهيئة -->
-        <section class="init-hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="init-logo">🚗 ترحال السودان</h1>
-                    <h2>تهيئة النظام والخدمات</h2>
-                    <p>نقوم بتهيئة النظام وتحضير جميع الخدمات لضمان تجربة سلسة وآمنة</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- حالة التهيئة -->
-        <div id="init-status" class="init-status loading">
-            <h3>🚀 جاري تهيئة النظام...</h3>
-            <p>يرجى الانتظار بينما نقوم بإعداد جميع الخدمات المطلوبة</p>
-        </div>
-
-        <!-- خطوات التهيئة -->
-        <div class="init-steps">
-            <h3>خطوات تهيئة النظام:</h3>
-            <div id="steps-list">
+        <div class="card">
+            <h1>🚗 ترحال السودان</h1>
+            <p>جاري تهيئة النظام والتحقق من الخدمات...</p>
+            
+            <div id="steps">
                 <div id="step1" class="step-item loading">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>اتصال قاعدة البيانات</h4>
-                        <p id="step1-desc">جاري الاتصال بـ Supabase...</p>
-                    </div>
-                    <div class="status-icon">⏳</div>
+                    <span>1. الاتصال بـ Supabase</span>
                 </div>
-                
                 <div id="step2" class="step-item">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>اتصال خدمة البيانات</h4>
-                        <p id="step2-desc">في انتظار التنفيذ...</p>
-                    </div>
-                    <div class="status-icon">⏳</div>
+                    <span>2. الاتصال بـ JSONBin</span>
                 </div>
-                
                 <div id="step3" class="step-item">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>تحميل البيانات</h4>
-                        <p id="step3-desc">في انتظار التنفيذ...</p>
-                    </div>
-                    <div class="status-icon">⏳</div>
-                </div>
-                
-                <div id="step4" class="step-item">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>بدء الخدمات</h4>
-                        <p id="step4-desc">في انتظار التنفيذ...</p>
-                    </div>
-                    <div class="status-icon">⏳</div>
-                </div>
-                
-                <div id="step5" class="step-item">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>التهيئة النهائية</h4>
-                        <p id="step5-desc">في انتظار التنفيذ...</p>
-                    </div>
-                    <div class="status-icon">⏳</div>
+                    <span>3. مزامنة بيانات السائقين</span>
                 </div>
             </div>
-        </div>
 
-        <!-- معلومات النظام -->
-        <div class="init-status" style="display: none;" id="system-info">
-            <h3>معلومات النظام:</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
-                <div class="info-card">
-                    <h5>حالة قاعدة البيانات</h5>
-                    <p id="db-status">غير متصل</p>
-                </div>
-                <div class="info-card">
-                    <h5>حالة JSONBin</h5>
-                    <p id="jsonbin-status">غير متصل</p>
-                </div>
-                <div class="info-card">
-                    <h5>عدد السائقين</h5>
-                    <p id="drivers-count">0</p>
-                </div>
-                <div class="info-card">
-                    <h5>آخر تحديث</h5>
-                    <p id="last-update">--</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- أزرار التنقل -->
-        <div id="init-actions" class="init-actions" style="display: none;">
-            <h3 class="success">✅ تم تهيئة النظام بنجاح!</h3>
-            <p>يمكنك الآن استخدام جميع خدمات ترحال</p>
-            
-            <div class="action-buttons">
-                <button onclick="window.location.href='index-main.html'" class="btn-primary-action">
-                    🚖 الذهاب للصفحة الرئيسية
-                </button>
-                <button onclick="window.location.href='admin.html'" class="btn-secondary-action">
-                    ⚙️ لوحة الإدارة
-                </button>
-                <button onclick="window.location.href='driver-register.html'" class="btn-primary-action">
-                    🚗 سجل كسائق
-                </button>
-                <button onclick="window.location.href='register.html'" class="btn-secondary-action">
-                    👤 سجل كزبون
-                </button>
-            </div>
-            
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-                <p><strong>معلومات التهيئة:</strong></p>
-                <p>معرف JSONBin: <span id="jsonbin-id">محلي</span></p>
-                <p>معرف الجلسة: <span id="session-id">--</span></p>
-                <button onclick="showDebugInfo()" class="btn-secondary-action" style="padding: 8px 15px; font-size: 14px;">
-                    عرض معلومات التصحيح
-                </button>
-            </div>
+            <button id="btnMain" class="btn-start" onclick="window.location.href='index-main.html'">
+                الدخول للنظام 🚀
+            </button>
         </div>
     </div>
 
-    <!-- تذييل الصفحة -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>ترحال</h3>
-                    <p>خدمة النقل الذكي الأولى في السودان</p>
-                    <div class="social-links">
-                        <a href="#">📘</a>
-                        <a href="#">🐦</a>
-                        <a href="#">📷</a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h4>الزبائن</h4>
-                    <a href="register.html">سجل كزبون</a>
-                    <a href="how-it-works.html">كيف تعمل</a>
-                    <a href="pricing.html">الأسعار</a>
-                    <a href="safety.html">السلامة</a>
-                </div>
-                <div class="footer-col">
-                    <h4>السائقين</h4>
-                    <a href="driver-register.html">سجل كسائق</a>
-                    <a href="driver-requirements.html">متطلبات السائقين</a>
-                    <a href="driver-earnings.html">الأرباح</a>
-                    <a href="driver-center.html">مركز السائقين</a>
-                </div>
-                <div class="footer-col">
-                    <h4>الدعم</h4>
-                    <a href="contact.html">اتصل بنا</a>
-                    <a href="help.html">المساعدة</a>
-                    <a href="terms.html">الشروط</a>
-                    <a href="privacy.html">الخصوصية</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2024 ترحال. جميع الحقوق محفوظة.</p>
-                <p>🇸🇩 صنع في السودان</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- السكريبتات -->
     <script src="js/supabase-config.js"></script>
     <script src="js/initialize-jsonbin.js"></script>
-    <script src="js/init-system.js"></script>
-    
+    <script src="js/geolocation.js"></script>
+
     <script>
-        // توليد معرف جلسة فريد
-        function generateSessionId() {
-            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log("🚀 بدء عملية الفحص...");
 
-        // عرض معلومات التصحيح
-        function showDebugInfo() {
-            const debugInfo = {
-                sessionId: localStorage.getItem('session_id'),
-                jsonbinId: localStorage.getItem('jsonbin_id'),
-                supabaseConnected: localStorage.getItem('supabase_connected'),
-                lastSync: localStorage.getItem('last_sync'),
-                userAgent: navigator.userAgent,
-                timestamp: new Date().toISOString()
-            };
-            
-            alert('معلومات التصحيح:\n' + JSON.stringify(debugInfo, null, 2));
-        }
-
-        // تحديث حالة الخطوة
-        function updateStep(stepNumber, status, message) {
-            const stepElement = document.getElementById(`step${stepNumber}`);
-            const descElement = document.getElementById(`step${stepNumber}-desc`);
-            const statusIcon = stepElement.querySelector('.status-icon');
-            
-            // تحديث الفئة
-            stepElement.className = `step-item ${status}`;
-            
-            // تحديث الوصف
-            if (descElement) {
-                descElement.textContent = message;
-            }
-            
-            // تحديث الأيقونة
-            switch(status) {
-                case 'success':
-                    statusIcon.textContent = '✅';
-                    break;
-                case 'error':
-                    statusIcon.textContent = '❌';
-                    break;
-                case 'loading':
-                    statusIcon.textContent = '⏳';
-                    break;
-                default:
-                    statusIcon.textContent = '⏳';
-            }
-            
-            console.log(`الخطوة ${stepNumber}: ${status} - ${message}`);
-        }
-
-        // تهيئة النظام عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('🚀 بدء تهيئة النظام...');
-            
-            // توليد وتخزين معرف الجلسة
-            const sessionId = generateSessionId();
-            localStorage.setItem('session_id', sessionId);
-            document.getElementById('session-id').textContent = sessionId.substring(0, 12) + '...';
-            
             try {
-                // الخطوة 1: اتصال Supabase
-                updateStep(1, 'loading', 'جاري الاتصال بقاعدة البيانات...');
-                const supabaseConnected = await testSupabaseConnection();
-                
-                if (supabaseConnected) {
-                    updateStep(1, 'success', '✅ اتصال قاعدة البيانات ناجح');
-                    document.getElementById('db-status').textContent = 'متصل';
-                    localStorage.setItem('supabase_connected', 'true');
-                }
-                
-                // الخطوة 2: اتصال JSONBin
-                updateStep(2, 'loading', 'جاري الاتصال بخدمة البيانات...');
-                const jsonbinResult = await initializeJSONBin();
-                
-                if (jsonbinResult.success) {
-                    updateStep(2, 'success', '✅ اتصال خدمة البيانات ناجح');
-                    document.getElementById('jsonbin-status').textContent = 'متصل';
-                    if (jsonbinResult.id) {
-                        document.getElementById('jsonbin-id').textContent = jsonbinResult.id;
-                    }
-                }
-                
-                // الخطوة 3: تحميل البيانات
-                updateStep(3, 'loading', 'جاري تحميل بيانات السائقين...');
-                const data = await loadJSONBinData();
-                const driversCount = Object.keys(data?.activeDrivers || {}).length;
-                
-                updateStep(3, 'success', `✅ تم تحميل ${driversCount} سائق`);
-                document.getElementById('drivers-count').textContent = driversCount;
-                
-                // الخطوة 4: بدء الخدمات
-                updateStep(4, 'loading', 'جاري بدء خدمات النظام...');
-                await startServices();
-                updateStep(4, 'success', '✅ جميع الخدمات جاهزة');
-                
-                // الخطوة 5: التهيئة النهائية
-                updateStep(5, 'loading', 'جاري الانتهاء من التهيئة...');
-                
-                // تحديث وقت آخر تحديث
-                const now = new Date();
-                document.getElementById('last-update').textContent = 
-                    now.toLocaleTimeString('ar-SA');
-                localStorage.setItem('last_sync', now.toISOString());
-                
-                // إظهار معلومات النظام
-                document.getElementById('system-info').style.display = 'block';
-                
-                updateStep(5, 'success', '✅ تم تهيئة النظام بنجاح');
-                
-                // إظهار رسالة النجاح النهائية
-                document.getElementById('init-status').innerHTML = 
-                    '<h3 class="success">✅ تم تهيئة النظام بنجاح!</h3>' +
-                    '<p>النظام جاهز الآن للاستخدام مع جميع الخدمات المفعلة</p>';
-                document.getElementById('init-status').className = 'init-status success';
-                
-                // إظهار أزرار التنقل
-                document.getElementById('init-actions').style.display = 'block';
-                
-                // حفظ حالة التهيئة
-                localStorage.setItem('system_initialized', 'true');
-                localStorage.setItem('init_timestamp', now.toISOString());
-                
-                console.log('✅ النظام جاهز للاستخدام!');
-                
+                // 1. فحص Supabase
+                updateUI(1, 'loading');
+                const isDBConnected = await testConnection();
+                if(isDBConnected) updateUI(1, 'success');
+
+                // 2. فحص JSONBin
+                updateUI(2, 'loading');
+                const binData = await window.getJSONBin();
+                if(binData) updateUI(2, 'success');
+
+                // 3. المزامنة والبدء
+                updateUI(3, 'loading');
+                // محاكاة تحميل بسيط
+                setTimeout(() => {
+                    updateUI(3, 'success');
+                    document.getElementById('btnMain').style.display = 'inline-block';
+                }, 1500);
+
             } catch (error) {
-                console.error('❌ خطأ في التهيئة:', error);
-                
-                // تحديث حالة الخطوة التي فشلت
-                const failedStep = document.querySelector('.step-item.loading');
-                if (failedStep) {
-                    failedStep.className = 'step-item error';
-                    const statusIcon = failedStep.querySelector('.status-icon');
-                    if (statusIcon) statusIcon.textContent = '❌';
-                }
-                
-                // عرض رسالة الخطأ
-                document.getElementById('init-status').innerHTML = 
-                    '<h3 class="error">❌ فشل تهيئة النظام</h3>' +
-                    '<p>الخطأ: ' + error.message + '</p>' +
-                    '<div style="background: #fff5f5; padding: 15px; border-radius: 8px; margin-top: 15px;">' +
-                    '<p><strong>يرجى التحقق من:</strong></p>' +
-                    '<ul style="text-align: right; padding-right: 20px;">' +
-                    '<li>اتصال الإنترنت</li>' +
-                    '<li>مفاتيح API في supabase-config.js</li>' +
-                    '<li>صلاحيات JSONBin</li>' +
-                    '<li>تفعيل CORS في المتصفح</li>' +
-                    '</ul>' +
-                    '</div>' +
-                    '<button onclick="location.reload()" class="btn-primary-action" style="margin-top: 20px;">إعادة المحاولة</button>';
-                document.getElementById('init-status').className = 'init-status error';
-                
-                // حفظ حالة الفشل
-                localStorage.setItem('last_init_error', error.message);
-                localStorage.setItem('last_init_failure', new Date().toISOString());
+                console.error("Initialization error:", error);
             }
         });
-        
-        async function testSupabaseConnection() {
+
+        async function testConnection() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('users')
-                    .select('count', { count: 'exact', head: true });
-                    
+                // استخدام window.supabaseClient لضمان الوصول للعميل المعرف في التوصيف
+                const { data, error } = await window.supabaseClient
+                    .from('drivers') 
+                    .select('*')
+                    .limit(1);
+                
                 if (error) throw error;
                 return true;
-            } catch (error) {
-                console.error('Supabase connection error:', error);
-                throw new Error('فشل الاتصال بقاعدة البيانات: ' + error.message);
+            } catch (err) {
+                const step1 = document.getElementById('step1');
+                step1.className = 'step-item error';
+                step1.innerHTML += ` <small>(${err.message})</small>`;
+                return false;
             }
         }
-        
-        async function startServices() {
-            // بدء المزامنة الدورية
-            setInterval(async () => {
-                try {
-                    await syncWithSupabase();
-                    const now = new Date();
-                    document.getElementById('last-update').textContent = 
-                        now.toLocaleTimeString('ar-SA');
-                    localStorage.setItem('last_sync', now.toISOString());
-                } catch (error) {
-                    console.error('Sync error:', error);
-                }
-            }, 30000);
-            
-            console.log('✅ خدمات النظام بدأت (المزامنة كل 30 ثانية)');
-            return true;
+
+        function updateUI(step, status) {
+            const el = document.getElementById(`step${step}`);
+            el.className = `step-item ${status}`;
         }
     </script>
 </body>
